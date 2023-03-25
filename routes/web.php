@@ -23,4 +23,5 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::get('/dashboard', [AdminController::class, 'AdminDashboard']);
+Route::get('/branchlist', [AdminController::class, 'BranchList']);
 
