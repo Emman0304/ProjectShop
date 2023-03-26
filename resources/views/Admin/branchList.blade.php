@@ -49,7 +49,8 @@
                         <h3 class="card-title">List of Branches</h3>
                       </div>
                       <div class="card-body" style="overflow-x:auto;">
-                        <table id="listTable" >
+                          <table id="example1" class="table table-bordered table-striped">
+                            <thead>
                             <tr>
                               <th>Branch Code</th>
                               <th>Description</th>
@@ -57,15 +58,27 @@
                               <th>Manager</th>
                               <th>No. of Employees</th>
                             </tr>
-                            @foreach ($list as $branch ) 
+                            </thead>
+                            <tbody>
+                              @foreach ($list as $branch ) 
+                              <tr>
+                                  <td>{{ $branch->BranchCode }}</td>
+                                  <td>{{ $branch->Description }}</td>
+                                  <td>{{ $branch->Address }}</td>
+                                  <td>{{ $branch->Manager }}</td>
+                                  <td>{{ $branch->NoEmployees }}</td>
+                              </tr>
+                              @endforeach
+                            </tbody>
+                            {{-- <tfoot>
                             <tr>
-                                <td>{{ $branch->BranchCode }}</td>
-                                <td>{{ $branch->Description }}</td>
-                                <td>{{ $branch->Address }}</td>
-                                <td>{{ $branch->Manager }}</td>
-                                <td>{{ $branch->NoEmployees }}</td>
+                              <th>Rendering engine</th>
+                              <th>Browser</th>
+                              <th>Platform(s)</th>
+                              <th>Engine version</th>
+                              <th>CSS grade</th>
                             </tr>
-                            @endforeach
+                            </tfoot> --}}
                           </table>
                       </div>
 
@@ -77,5 +90,34 @@
    
   </div>
   <!-- /.content-wrapper -->
+
+@endsection
+
+@section('scripts')
+
+  <!-- DataTables  & Plugins -->
+<script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+<script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+<script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+<script src="{{ asset('plugins/datatables-buttons/js/dataTables.buttons.min.js') }}"></script>
+<script src="{{ asset('plugins/datatables-buttons/js/buttons.bootstrap4.min.js') }}"></script>
+<script src="{{ asset('plugins/jszip/jszip.min.js') }}"></script>
+<script src="{{ asset('plugins/pdfmake/pdfmake.min.js') }}"></script>
+<script src="{{ asset('plugins/pdfmake/vfs_fonts.js') }}"></script>
+<script src="{{ asset('plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
+<script src="{{ asset('plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
+<script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
+
+<script>
+
+  $(function () {
+    $("#example1").DataTable({
+      "responsive": true, "lengthChange": false, "autoWidth": false,
+      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+  });
+
+</script>
 
 @endsection
