@@ -9,9 +9,9 @@ class tblBranches extends Model
 {
     use HasFactory;
 
-    protected $filable =[
+    protected $fillable =[
         "BranchCode",
-        "Decription",
+        "Description",
         "Address",
         "Manager",
         "NoEmployees"

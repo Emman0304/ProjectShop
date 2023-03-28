@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\tblBranches;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class AdminController extends Controller
 {
@@ -24,4 +25,47 @@ class AdminController extends Controller
 
         return view('Admin.branchlist',$data);
     }
+
+    public function AddBranch(Request $request)
+    {
+
+        $var = (object) $request->all();
+        // dd($var);
+
+        $validate = Validator::make($request->all(),[
+            "Address" => "required",
+            "Description" => "required",
+            "EmployeeCount" => "required",
+            "Manager" => "required",
+            "branchCode" => "required"
+        ]);
+
+        if ($validate->fails()) {
+            return [
+                "status" => "0",
+                "message" => $validate->errors()
+            ];
+        }else{
+            $save = tblBranches::updateOrCreate(
+                [
+                    "BranchCode" => $var->branchCode,
+                ],[
+                    "Description" => $var->Description,
+                    "Address" => $var->Address,
+                    "Manager" => $var->Manager,
+                    "NoEmployees" => $var->EmployeeCount
+                ]);
+
+            return [
+                "status" => "1",
+                "message" => "Successfuly Saved"
+            ];
+        }
+    }
+    public function BranchDtable()
+{
+    $users = tblBranches::select(['BranchCode', 'Description', 'Address', 'Manager', 'NoEmployees'])->get();
+
+    return response()->json(['data' => $users]);
+}
 }
