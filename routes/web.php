@@ -27,5 +27,5 @@ Route::get('/branchlist', [AdminController::class, 'BranchList']);
 
 Route::post('/addbranch', [AdminController::class, 'AddBranch'])->name('addBranch');
 
-Route::get('/branchTable',[AdminController::class],'BranchDtable')->name('branchTable');
+Route::get('/branchTable',[AdminController::class,'BranchDtable'])->name('branchTable');
 

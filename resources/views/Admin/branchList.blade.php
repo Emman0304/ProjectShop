@@ -65,25 +65,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                              @foreach ($list as $branch ) 
-                              <tr>
-                                  <td>{{ $branch->BranchCode }}</td>
-                                  <td>{{ $branch->Description }}</td>
-                                  <td>{{ $branch->Address }}</td>
-                                  <td>{{ $branch->Manager }}</td>
-                                  <td>{{ $branch->NoEmployees }}</td>
-                              </tr>
-                              @endforeach
                             </tbody>
-                            {{-- <tfoot>
-                            <tr>
-                              <th>Rendering engine</th>
-                              <th>Browser</th>
-                              <th>Platform(s)</th>
-                              <th>Engine version</th>
-                              <th>CSS grade</th>
-                            </tr>
-                            </tfoot> --}}
                           </table>
                       </div>
 
@@ -165,12 +147,20 @@
 
   $(function () {
 
-     var dtable = $("#example1").DataTable({
-      "processing": true,
-      "responsive": true, "lengthChange": false, "autoWidth": false,
-      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
-    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-
+        var dtable = $("#example1").DataTable({
+          processing: true,
+          serverside:true,
+          ajax: "{{ route('branchTable') }}",
+          columns: [
+              { data: 'BranchCode' },
+              { data: 'Description' },
+              { data: 'Address' },
+              { data: 'Manager' },
+              { data: 'NoEmployees' }
+          ]
+        });
+    
+    
     $('#addBranch').submit(function (e) { 
       e.preventDefault();
       var form_data = $("#addBranch").serializeArray();
@@ -181,11 +171,16 @@
       data: form_data,
         // dataType: "dataType",
         success: function (response) {
-          console.log(response.status,response.message);
+          console.log(response.status,response.message);    
+          reload();    
         }
       });
-
     });
+
+    function reload(){
+          dtable.ajax.reload();
+        }
+
   });
 
 </script>

@@ -63,9 +63,10 @@ class AdminController extends Controller
         }
     }
     public function BranchDtable()
-{
-    $users = tblBranches::select(['BranchCode', 'Description', 'Address', 'Manager', 'NoEmployees'])->get();
-
-    return response()->json(['data' => $users]);
-}
+    {
+        $users = tblBranches::select(['BranchCode', 'Description', 'Address', 'Manager', 'NoEmployees'])->get();
+        $result['data'] = $users;
+        
+        return  json_encode($result);
+    }
 }
