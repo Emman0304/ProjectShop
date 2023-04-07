@@ -157,7 +157,10 @@
               { data: 'Address' },
               { data: 'Manager' },
               { data: 'NoEmployees' }
-          ]
+          ],
+          responsive: true, 
+          lengthChange: false, 
+          autoWidth: false,
         });
     
     
