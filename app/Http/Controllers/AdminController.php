@@ -31,42 +31,100 @@ class AdminController extends Controller
 
         $var = (object) $request->all();
         // dd($var);
-
+        
         $validate = Validator::make($request->all(),[
             "Address" => "required",
             "Description" => "required",
-            "EmployeeCount" => "required",
+            "EmployeeCount" => "required|integer",
             "Manager" => "required",
             "branchCode" => "required"
         ]);
 
-        if ($validate->fails()) {
-            return [
-                "status" => "0",
-                "message" => $validate->errors()
-            ];
-        }else{
-            $save = tblBranches::updateOrCreate(
-                [
-                    "BranchCode" => $var->branchCode,
-                ],[
-                    "Description" => $var->Description,
-                    "Address" => $var->Address,
-                    "Manager" => $var->Manager,
-                    "NoEmployees" => $var->EmployeeCount
-                ]);
+        $return =[
+            "status" =>0,
+            "message" =>$validate->errors()
+        ];
 
-            return [
-                "status" => "1",
-                "message" => "Successfuly Saved"
+        if (!$validate->fails()) {
+
+            $tosave=[
+                "BranchCode" => $var->branchCode,
+                "Description" => $var->Description,
+                "Address" => $var->Address,
+                "Manager" => $var->Manager,
+                "NoEmployees" => $var->EmployeeCount,
             ];
+            
+            if (isset($var->id) && !empty($var->id)) {
+                
+                tblBranches::where(['id' => $var->id])->update($tosave);
+
+                $return =[
+                    "status" =>1,
+                    "message" =>"Updated Successfuly"
+                ];
+
+            }else{
+
+                tblBranches::create($tosave);
+
+                $return =[
+                    "status" =>1,
+                    "message" =>"Saved Successfuly"
+                ];
+            }
+
         }
+
+        return $return;
     }
+    
     public function BranchDtable()
     {
-        $users = tblBranches::select(['BranchCode', 'Description', 'Address', 'Manager', 'NoEmployees'])->get();
-        $result['data'] = $users;
+        $branch = tblBranches::select(['id','BranchCode', 'Description', 'Address', 'Manager', 'NoEmployees'])->orderBy('id','desc')->get();
+        $branchArray = array();
+        $count=0;
         
+        foreach ($branch as $key => $row) {
+
+            $actionButton = "<div class='btn-group btn-group-sm'>                                           
+                                    <a class='btn btn-success edit' data-id='{$row->id}'><i class='fa fa-edit'></i></a>
+                                    <a class='btn btn-danger' data-id='{$row->id}'><i class='fa fa-trash'></i></a>
+                                </div>";
+
+            $branchArray[$count++] = array(
+                $row->id,
+                $row->BranchCode,
+                $row->Description,
+                $row->Address,
+                $row->Manager,
+                $row->NoEmployees,
+                $actionButton
+            );
+        }
+
+        $result['data'] = $branchArray;
+
         return  json_encode($result);
+    }
+
+    public function editBranch(Request $request){
+        $var = (object) $request->all();
+
+        $result=[
+            'data' => "",
+            'status' => 0
+        ];
+        
+        $branch = tblBranches::where(['id' => $var->id])->first();
+
+        if (!empty($branch)) {
+            $result=[
+                'data' => $branch,
+                'status' => 1
+            ];    
+        }
+
+        return $result;
     }
 }
