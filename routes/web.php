@@ -27,7 +27,8 @@ Route::prefix('admin')->group(function() {
     Route::get('/branchlist', [AdminController::class, 'BranchList']);
     Route::post('/addbranch', [AdminController::class, 'AddBranch'])->name('addBranch');
     Route::get('/branchTable',[AdminController::class,'BranchDtable'])->name('branchTable');
-    Route::get('/editBranch',[AdminController::class,'editBranch'])->name('editBranch');    
+    Route::post('/editBranch',[AdminController::class,'editBranch'])->name('editBranch');    
+    Route::post('/deleteBranch',[AdminController::class,'deleteBranch'])->name('deleteBranch'); 
 });
 
 

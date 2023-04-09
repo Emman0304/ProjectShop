@@ -1,10 +1,6 @@
 @extends('Admin.adminLayouts')
 @section('content')
 
-@php
-    // @dd($list);
-@endphp
-
     <style>
         table {
         border-collapse: collapse;
@@ -53,23 +49,24 @@
                         </button>
                       </div>
                       <div class="card-body" style="overflow-x:auto;">
+                        <div class="table-responsive">
                           <table id="example1" class="table table-bordered table-striped">
                             <thead>
-                            <tr>
-                              <th>Branch ID</th>
-                              <th>Branch Code</th>
-                              <th>Description</th>
-                              <th>Address</th>
-                              <th>Manager</th>
-                              <th>No. of Employees</th>
-                              <th></th>
-                            </tr>
+                              <tr>
+                                <th>Branch ID</th>
+                                <th>Branch Code</th>
+                                <th>Description</th>
+                                <th>Address</th>
+                                <th>Manager</th>
+                                <th>No. of Employees</th>
+                                <th></th>
+                              </tr>
                             </thead>
                             <tbody>
                             </tbody>
                           </table>
+                        </div>                         
                       </div>
-
                   </div>
                 </div>
             </div>
@@ -82,23 +79,23 @@
         <input name="id" type="hidden" class="form-control" id="id">
 
         <label for="exampleInputText" class="form-label">Branch Code</label>
-        <input name="branchCode" type="text" class="form-control" id="branchCode">
+        <input name="branchCode" type="text" class="form-control" id="branchCode" required>
       </div>
       <div class="mb-3">
         <label for="exampleInputText" class="form-label">Description</label>
-        <input name="Description" type="text" class="form-control" id="Description">
+        <input name="Description" type="text" class="form-control" id="Description" required>
       </div>
       <div class="mb-3">
         <label for="exampleInputText" class="form-label">Address</label>
-        <input name="Address" type="text" class="form-control" id="Address">
+        <input name="Address" type="text" class="form-control" id="Address" required>
       </div>
       <div class="mb-3">
         <label for="exampleInputText" class="form-label">Manager</label>
-        <input name="Manager" type="text" class="form-control" id="Manager">
+        <input name="Manager" type="text" class="form-control" id="Manager" required>
       </div>
       <div class="mb-3">
         <label for="exampleInputText" class="form-label">No. of Employees</label>
-        <input name="EmployeeCount" type="text" class="form-control" id="EmployeeCount">
+        <input name="EmployeeCount" type="number" class="form-control" id="EmployeeCount" required>
       </div>
       <button id="submit" type="submit" class="btn btn-primary">Save</button>
 
@@ -112,13 +109,13 @@
 
 <script>
 
-  $(function () {
-
+  $(document).ready(function () {
+  
         var dtable = $("#example1").DataTable({
           processing: true,
           serverside:true,
           ajax: "{{ route('branchTable') }}",
-          responsive: true, 
+          // responsive: true, 
           lengthChange: false, 
           autoWidth: false,
           ordering: false,
@@ -128,7 +125,7 @@
               id = $(this).attr('data-id');
 
               $.ajax({
-                type: "GET",
+                type: "POST",
                 url: "{{ route('editBranch') }}",
                 data:{
                   id:id
@@ -148,7 +145,43 @@
               });
 
             });
-       
+
+            $(row).find('.delete').unbind('click').on('click',function(){
+              id = $(this).attr('data-id');
+
+              Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+              }).then((result) => {
+                if (result.isConfirmed) {
+                    
+                  $.ajax({
+                      type: "POST",
+                      url: "{{ route('deleteBranch') }}",
+                      data: {
+                        id:id
+                      },
+                      // dataType: "dataType",
+                      success: function (response) {
+                        if (response.status > 0) {
+                            Swal.fire(
+                              'Deleted!',
+                              response.message,
+                              'success'
+                            )
+                            reload();
+
+                        }
+                      }
+                  });
+                }
+              })         
+            });   
           }
         });
     
@@ -167,13 +200,22 @@
       data: form_data,
         // dataType: "dataType",
         success: function (response) {
-          console.log(response.status);
-
           if (response.status > 0) {
-            $("#exampleModal").modal('hide');
-            reload();   
-          } 
-           
+            Swal.fire(
+              response.message,
+              '',
+              'success'
+            ).then((ok) => {
+              $("#exampleModal").modal('hide');
+              reload();   
+            });
+          }else{
+            Swal.fire(
+              response.message,
+              '',
+              'warning'
+            )
+          }       
         }
       });
     });

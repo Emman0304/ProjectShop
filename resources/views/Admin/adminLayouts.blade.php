@@ -7,6 +7,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+
   <title>Project Shopping</title>
 
   <!-- Google Font: Source Sans Pro -->
@@ -27,6 +29,8 @@
 
   <!-- Theme style -->
   <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
+  {{-- sweet alert --}}
+  <link rel="stylesheet" href="{{ asset('plugins/sweetalert2/sweetalert2.css') }}">
 
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -888,7 +892,8 @@
 <script src="{{ asset('plugins/datatables-buttons/js/buttons.bootstrap4.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
 
-
+{{-- sweet alert --}}
+<script src="{{ asset('plugins/sweetalert2/sweetalert2.min.js') }}"></script>
 
 <script>
   $.ajaxSetup({

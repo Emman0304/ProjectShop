@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\tblBranches;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Classes\Admin as AdminClass;
 
 class AdminController extends Controller
 {
@@ -27,55 +28,58 @@ class AdminController extends Controller
     }
 
     public function AddBranch(Request $request)
-    {
-
+    {   
         $var = (object) $request->all();
-        // dd($var);
-        
+
         $validate = Validator::make($request->all(),[
             "Address" => "required",
             "Description" => "required",
             "EmployeeCount" => "required|integer",
             "Manager" => "required",
-            "branchCode" => "required"
+            "branchCode" => "required|unique:tbl_branches,BranchCode,".$var->id
         ]);
 
         $return =[
             "status" =>0,
-            "message" =>$validate->errors()
+            "message" =>'Branch Code Already Exist.'
         ];
 
         if (!$validate->fails()) {
 
             $tosave=[
-                "BranchCode" => $var->branchCode,
+                "BranchCode" => strtoupper($var->branchCode),
                 "Description" => $var->Description,
                 "Address" => $var->Address,
                 "Manager" => $var->Manager,
                 "NoEmployees" => $var->EmployeeCount,
             ];
             
-            if (isset($var->id) && !empty($var->id)) {
+            if (isset($var->id) && !empty($var->id)) {    
                 
-                tblBranches::where(['id' => $var->id])->update($tosave);
+                tblBranches::updateOrCreate(['id' => $var->id],$tosave);
 
                 $return =[
                     "status" =>1,
-                    "message" =>"Updated Successfuly"
+                    "message" =>"Updated Successfuly."
                 ];
 
             }else{
+                $setTableSave = tblBranches::where(['BranchCode' => $var->branchCode])->first();
 
-                tblBranches::create($tosave);
-
-                $return =[
-                    "status" =>1,
-                    "message" =>"Saved Successfuly"
-                ];
+                if (isset($setTableSave) && !empty($setTableSave)) {
+                    $return =[
+                        "status" =>0,
+                        "message" =>"Branch Code Already Exist."
+                    ];
+                }else{
+                    tblBranches::create($tosave);
+                    $return =[
+                        "status" =>1,
+                        "message" =>"Saved Successfuly."
+                    ];
+                }       
             }
-
         }
-
         return $return;
     }
     
@@ -89,7 +93,7 @@ class AdminController extends Controller
 
             $actionButton = "<div class='btn-group btn-group-sm'>                                           
                                     <a class='btn btn-success edit' data-id='{$row->id}'><i class='fa fa-edit'></i></a>
-                                    <a class='btn btn-danger' data-id='{$row->id}'><i class='fa fa-trash'></i></a>
+                                    <a class='btn btn-danger delete' data-id='{$row->id}'><i class='fa fa-trash'></i></a>
                                 </div>";
 
             $branchArray[$count++] = array(
@@ -126,5 +130,26 @@ class AdminController extends Controller
         }
 
         return $result;
+    }
+
+    public function deleteBranch(Request $request)
+    {
+        $var = (object) $request->all();
+
+        $return = [
+            'status' => 0,
+            'message' => "An Error Occured"
+        ];
+
+        if (isset($var->id) && !empty($var->id)) {
+            tblBranches::where(['id' => $var->id])->first()->delete();
+
+            $return = [
+                'status' => 1,
+                'message' => "Deleted Succesfully"
+            ];
+        }
+        
+        return $return;
     }
 }

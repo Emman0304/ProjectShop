@@ -9,8 +9,7 @@
           </button>
         </div>
         <div class="modal-body">
-          <form id="{{ isset($form_id) ? $form_id:'' }}" method="POST">
-            @csrf        
+          <form id="{{ isset($form_id) ? $form_id:'' }}" method="POST">      
             {{ $slot }}    
       </div>
       <div class="modal-footer">
