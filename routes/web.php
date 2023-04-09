@@ -23,12 +23,20 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::prefix('admin')->group(function() {
-    Route::get('/dashboard', [AdminController::class, 'AdminDashboard']);
-    Route::get('/branchlist', [AdminController::class, 'BranchList']);
+    // Branch File
+    Route::get('/dashboard', [AdminController::class, 'AdminDashboard'])->name('Admindashboard');
+    Route::get('/branchlist', [AdminController::class, 'BranchList'])->name('branchlist');
     Route::post('/addbranch', [AdminController::class, 'AddBranch'])->name('addBranch');
     Route::get('/branchTable',[AdminController::class,'BranchDtable'])->name('branchTable');
     Route::post('/editBranch',[AdminController::class,'editBranch'])->name('editBranch');    
     Route::post('/deleteBranch',[AdminController::class,'deleteBranch'])->name('deleteBranch'); 
+
+    // Employee File
+    Route::get('/empList',[AdminController::class,'employeeList'])->name('employeeList');
+    Route::get('/employeeTable',[AdminController::class,'employeeTable'])->name('employeeTable');
+    Route::post('/deleteEmployee',[AdminController::class,'deleteEmployee'])->name('deleteEmployee'); 
+    Route::post('/addEmployee', [AdminController::class, 'AddEmployee'])->name('AddEmployee');
+    Route::post('/editEmployee',[AdminController::class,'editEmployee'])->name('editEmployee');    
 });
 
 
