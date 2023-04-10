@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Classes\Admin as AdminClass;
 use App\Models\tblEmployees;
+use App\Models\tblPositions;
 
 class AdminController extends Controller
 {
@@ -31,9 +32,14 @@ class AdminController extends Controller
 
     public function employeeList()
     {
+        $AdminClass = new AdminClass;
+        
+
         $data['EmpfileActive'] = 'active';
         $data['listActive'] = 'active';
         $data['menu'] = 'menu-open';
+        $data['positions'] = tblPositions::select('PositionCode','Description')->get();
+        $data['branches'] = tblBranches::select('BranchCode','Description')->get();
 
         return view('Admin.EmployeeList',$data);
     }
@@ -217,18 +223,18 @@ class AdminController extends Controller
         
         $validate = Validator::make($request->all(),[
             "Address" => "required",
-            "contactNo" => "required",
+            "contactNo" => "required|unique:tbl_employees,ContactNo,".$var->id,
             "Position" => "required",
             "LName" => "required",
             "FName" => "required",
             "Age" => "required",
             "branchCode" => "required",
-            "email" => "required"
+            "email" => "required|unique:tbl_employees,Email,".$var->id
         ]);
 
         $return =[
             "status" =>0,
-            "message" =>'An Eror Occured'
+            "message" =>'Email or Contact No. already taken.'
         ];
 
         if (!$validate->fails()) {

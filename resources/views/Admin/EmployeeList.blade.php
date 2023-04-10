@@ -77,11 +77,23 @@
             <input name="id" type="hidden" class="form-control" id="id">
 
             <label for="exampleInputText" class="form-label">Branch</label>
-            <input name="branchCode" type="text" class="form-control" id="branchCode" required>
+            {{-- <input name="branchCode" type="text" class="form-control" id="branchCode" required> --}}
+            <select name="branchCode" id="branchCode" class="form-control" required>
+              <option value="">Select Branch</option>
+              @foreach ( $branches as $branch )
+                <option value="{{ $branch->BranchCode }}">{{ $branch->Description }}</option>
+              @endforeach
+            </select>
         </div>
         <div class="mb-3">
             <label for="exampleInputText" class="form-label">Position</label>
-            <input name="Position" type="text" class="form-control" id="Position" required>
+            {{-- <input name="Position" type="text" class="form-control" id="Position" required> --}}
+            <select name="Position" id="Position" class="form-control" required>
+              <option value="">Select Position</option>
+              @foreach ( $positions as $pos )
+                <option value="{{ $pos->PositionCode }}">{{ $pos->Description }}</option>
+              @endforeach
+            </select>
         </div>
         <div class="mb-3">
             <label for="exampleInputText" class="form-label">Last Name</label>
@@ -267,6 +279,8 @@
           $('#Position').val('');
           $('#LName').val('');
           $('#FName').val('');
+          $('#Age').val('');
+          $('#email').val('');
           $('#MName').val('');
           $('#Suffix').val('');
           $('#Address').val('');
