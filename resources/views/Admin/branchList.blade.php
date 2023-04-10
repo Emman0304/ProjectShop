@@ -1,10 +1,6 @@
 @extends('Admin.adminLayouts')
 @section('content')
 
-@php
-    // @dd($list);
-@endphp
-
     <style>
         table {
         border-collapse: collapse;
@@ -53,90 +49,62 @@
                         </button>
                       </div>
                       <div class="card-body" style="overflow-x:auto;">
+                        <div class="table-responsive">
                           <table id="example1" class="table table-bordered table-striped">
                             <thead>
-                            <tr>
-                              {{-- <th>id</th> --}}
-                              <th>Branch Code</th>
-                              <th>Description</th>
-                              <th>Address</th>
-                              <th>Manager</th>
-                              <th>No. of Employees</th>
-                            </tr>
+                              <tr>
+                                <th>Branch ID</th>
+                                <th>Branch Code</th>
+                                <th>Description</th>
+                                <th>Address</th>
+                                <th>Manager</th>
+                                <th>No. of Employees</th>
+                                <th></th>
+                              </tr>
                             </thead>
                             <tbody>
-                              @foreach ($list as $branch ) 
-                              <tr>
-                                  <td>{{ $branch->BranchCode }}</td>
-                                  <td>{{ $branch->Description }}</td>
-                                  <td>{{ $branch->Address }}</td>
-                                  <td>{{ $branch->Manager }}</td>
-                                  <td>{{ $branch->NoEmployees }}</td>
-                              </tr>
-                              @endforeach
                             </tbody>
-                            {{-- <tfoot>
-                            <tr>
-                              <th>Rendering engine</th>
-                              <th>Browser</th>
-                              <th>Platform(s)</th>
-                              <th>Engine version</th>
-                              <th>CSS grade</th>
-                            </tr>
-                            </tfoot> --}}
                           </table>
+                        </div>                         
                       </div>
-
                   </div>
                 </div>
             </div>
         </div>
     </section>
 
-        
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Add New Branch</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <form name="addBranch" id="addBranch" method="POST">
-              @csrf
-              <div class="mb-3">
-                <label for="exampleInputText" class="form-label">Branch Code</label>
-                <input name="branchCode" type="text" class="form-control" id="exampleInputText">
-              </div>
-              <div class="mb-3">
-                <label for="exampleInputText" class="form-label">Description</label>
-                <input name="Description" type="text" class="form-control" id="exampleInputText">
-              </div>
-              <div class="mb-3">
-                <label for="exampleInputText" class="form-label">Address</label>
-                <input name="Address" type="text" class="form-control" id="exampleInputText">
-              </div>
-              <div class="mb-3">
-                <label for="exampleInputText" class="form-label">Manager</label>
-                <input name="Manager" type="text" class="form-control" id="exampleInputText">
-              </div>
-              <div class="mb-3">
-                <label for="exampleInputText" class="form-label">No. of Employees</label>
-                <input name="EmployeeCount" type="text" class="form-control" id="exampleInputText">
-              </div>
-              <button id="submit" type="submit" class="btn btn-primary">Save</button>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          </div>
-        </div>
+    @component('components.modal',['modal_id' => 'exampleModal','title' => 'Add New Branch','form_id' => 'addBranch'  ])
+      
+      <div class="mb-3">
+        <input name="id" type="hidden" class="form-control" id="id">
+
+        <label for="exampleInputText" class="form-label">Branch Code</label>
+        <input name="branchCode" type="text" class="form-control" id="branchCode" required>
       </div>
-    </div>
-   
+      <div class="mb-3">
+        <label for="exampleInputText" class="form-label">Description</label>
+        <input name="Description" type="text" class="form-control" id="Description" required>
+      </div>
+      <div class="mb-3">
+        <label for="exampleInputText" class="form-label">Address</label>
+        <input name="Address" type="text" class="form-control" id="Address" required>
+      </div>
+      <div class="mb-3">
+        <label for="exampleInputText" class="form-label">Manager</label>
+        <select name="Manager" id="Manager" type="text" class="form-control" required>
+          <option value="">Select Manager</option>
+          @foreach ($managers as $mngr )
+            <option value="{{ $mngr->id }}">{{ $mngr->Name }}</option>
+          @endforeach
+      </select>
+      </div>
+      <div class="mb-3">
+        <label for="exampleInputText" class="form-label">No. of Employees</label>
+        <input name="EmployeeCount" type="number" class="form-control" id="EmployeeCount" required>
+      </div>
+      <button id="submit" type="submit" class="btn btn-primary">Save</button>
+
+    @endcomponent
   </div>
   <!-- /.content-wrapper -->
 
@@ -144,32 +112,88 @@
 
 @section('scripts')
 
-{{-- bootstrap 4 --}}
-<script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-
-  <!-- DataTables  & Plugins -->
-<script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
-<script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
-<script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
-<script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
-<script src="{{ asset('plugins/datatables-buttons/js/dataTables.buttons.min.js') }}"></script>
-<script src="{{ asset('plugins/datatables-buttons/js/buttons.bootstrap4.min.js') }}"></script>
-<script src="{{ asset('plugins/jszip/jszip.min.js') }}"></script>
-<script src="{{ asset('plugins/pdfmake/pdfmake.min.js') }}"></script>
-<script src="{{ asset('plugins/pdfmake/vfs_fonts.js') }}"></script>
-<script src="{{ asset('plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
-<script src="{{ asset('plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
-<script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
-
 <script>
 
-  $(function () {
+  $(document).ready(function () {
+  
+        var dtable = $("#example1").DataTable({
+          processing: true,
+          serverside:true,
+          ajax: "{{ route('branchTable') }}",
+          // responsive: true, 
+          lengthChange: false, 
+          autoWidth: false,
+          ordering: false,
+          rowCallback : function(row,data,DisplayIndex){
 
-     var dtable = $("#example1").DataTable({
-      "processing": true,
-      "responsive": true, "lengthChange": false, "autoWidth": false,
-      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
-    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+            $(row).find('.edit').unbind('click').on('click',function(){
+              id = $(this).attr('data-id');
+
+              $.ajax({
+                type: "POST",
+                url: "{{ route('editBranch') }}",
+                data:{
+                  id:id
+                },
+                // dataType: "dataType",
+                success: function (response) {
+                  if (response.status > 0) {
+                      $('#id').val(response.data.id);
+                      $('#branchCode').val(response.data.BranchCode);
+                      $('#Description').val(response.data.Description);
+                      $('#Address').val(response.data.Address);
+                      $('#Manager').val(response.data.Manager);
+                      $('#EmployeeCount').val(response.data.NoEmployees);
+                      $("#exampleModal").modal('show');
+                    }
+                }
+              });
+
+            });
+
+            $(row).find('.delete').unbind('click').on('click',function(){
+              id = $(this).attr('data-id');
+
+              Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+              }).then((result) => {
+                if (result.isConfirmed) {
+                    
+                  $.ajax({
+                      type: "POST",
+                      url: "{{ route('deleteBranch') }}",
+                      data: {
+                        id:id
+                      },
+                      // dataType: "dataType",
+                      success: function (response) {
+                        if (response.status > 0) {
+                            Swal.fire(
+                              'Deleted!',
+                              response.message,
+                              'success'
+                            )
+                            reload();
+
+                        }
+                      }
+                  });
+                }
+              })         
+            });   
+          }
+        });
+    
+    function reload(){
+          dtable.ajax.reload();
+        }
+
 
     $('#addBranch').submit(function (e) { 
       e.preventDefault();
@@ -181,11 +205,37 @@
       data: form_data,
         // dataType: "dataType",
         success: function (response) {
-          console.log(response.status,response.message);
+          if (response.status > 0) {
+            Swal.fire(
+              response.message,
+              '',
+              'success'
+            ).then((ok) => {
+              $("#exampleModal").modal('hide');
+              reload();   
+            });
+          }else{
+            Swal.fire(
+              response.message,
+              '',
+              'warning'
+            )
+          }       
         }
       });
-
     });
+
+
+    $('#exampleModal').on('hide.bs.modal', function () {
+          $('#id').val('');
+          $('#branchCode').val('');
+          $('#Description').val('');
+          $('#Address').val('');
+          $('#Manager').val('');
+          $('#EmployeeCount').val('');
+        });
+
+
   });
 
 </script>
