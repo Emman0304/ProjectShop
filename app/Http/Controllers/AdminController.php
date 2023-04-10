@@ -26,6 +26,7 @@ class AdminController extends Controller
     public function BranchList()
     {
         $data['activeBranch'] = 'active';
+        $data['managers'] = tblEmployees::select('id','Name')->where(['Position' => 'MNGR'])->get();
 
         return view('Admin.branchlist',$data);
     }
@@ -105,6 +106,7 @@ class AdminController extends Controller
         $branch = tblBranches::select(['id','BranchCode', 'Description', 'Address', 'Manager', 'NoEmployees'])->orderBy('id','desc')->get();
         $branchArray = array();
         $count=0;
+        $AdminClass = new AdminClass;
         
         foreach ($branch as $key => $row) {
 
@@ -112,13 +114,14 @@ class AdminController extends Controller
                                     <a class='btn btn-success edit' data-id='{$row->id}'><i class='fa fa-edit'></i></a>
                                     <a class='btn btn-danger delete' data-id='{$row->id}'><i class='fa fa-trash'></i></a>
                                 </div>";
+            $mngrName = $AdminClass->ManagerName($row->Manager);
 
             $branchArray[$count++] = array(
                 $row->id,
                 $row->BranchCode,
                 $row->Description,
                 $row->Address,
-                $row->Manager,
+                $mngrName,
                 $row->NoEmployees,
                 $actionButton
             );
@@ -184,11 +187,15 @@ class AdminController extends Controller
             $MName = isset($row->MName) ? $row->MName:'';
             $Suffix = isset($row->Suffix) ? $row->Suffix:'';
 
+            $AdminClass = new AdminClass;
+            $PosDesc = $AdminClass->PostDesc($row->Position);
+            $branchDesc = $AdminClass->Branchdesc($row->BranchCode);
+
             $employeeArray[$count++] = array(
                 $row->id,
-                $row->FName." ".$row->LName.", ".$MName,
-                $row->Position,
-                $row->BranchCode,
+                $row->Name,
+                $PosDesc,
+                $branchDesc,
                 $actionButton
             );
         }
@@ -237,6 +244,16 @@ class AdminController extends Controller
             "message" =>'Email or Contact No. already taken.'
         ];
 
+        if (isset($var->MName) && !empty($var->MName) && isset($var->Suffix) && !empty($var->Suffix)) {
+            $Fullname = $var->FName." ".$var->MName." ".$var->LName.", ".$var->Suffix;
+        }elseif (isset($var->MName) && !empty($var->MName) && !isset($var->Suffix) && empty($var->Suffix)) {
+            $Fullname = $var->FName." ".$var->MName." ".$var->LName;
+        }elseif(!isset($var->MName) && empty($var->MName) && isset($var->Suffix) && !empty($var->Suffix)){
+            $Fullname = $var->FName." ".$var->LName.", ".$var->Suffix;
+        }else{
+            $Fullname = $var->FName." ".$var->LName;
+        }
+
         if (!$validate->fails()) {
 
             $tosave=[
@@ -245,6 +262,7 @@ class AdminController extends Controller
                 "LName" => $var->LName,
                 "FName" => $var->FName,
                 "MName" => $var->MName,
+                'Name' => $Fullname,
                 "Suffix" => $var->Suffix,
                 "Age" => $var->Age,
                 "ContactNo" => $var->contactNo,

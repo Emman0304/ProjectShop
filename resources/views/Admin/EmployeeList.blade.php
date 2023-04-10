@@ -77,7 +77,6 @@
             <input name="id" type="hidden" class="form-control" id="id">
 
             <label for="exampleInputText" class="form-label">Branch</label>
-            {{-- <input name="branchCode" type="text" class="form-control" id="branchCode" required> --}}
             <select name="branchCode" id="branchCode" class="form-control" required>
               <option value="">Select Branch</option>
               @foreach ( $branches as $branch )
@@ -87,7 +86,6 @@
         </div>
         <div class="mb-3">
             <label for="exampleInputText" class="form-label">Position</label>
-            {{-- <input name="Position" type="text" class="form-control" id="Position" required> --}}
             <select name="Position" id="Position" class="form-control" required>
               <option value="">Select Position</option>
               @foreach ( $positions as $pos )

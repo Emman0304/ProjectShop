@@ -19,6 +19,7 @@ class CreateTblEmployeesTable extends Migration
             $table->string('FName');
             $table->string('MName')->nullable();
             $table->string('Suffix')->nullable();
+            $table->string('Name');
             $table->integer('Age');
             $table->string('Address');
             $table->string('ContactNo');

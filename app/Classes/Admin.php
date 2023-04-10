@@ -3,7 +3,9 @@
 namespace App\Classes;
 
 use App\Models\tblBranches;
+use App\Models\tblEmployees;
 use App\Models\tblPositions;
+use Illuminate\Support\Facades\DB;
 
 class Admin{
 
@@ -20,18 +22,35 @@ class Admin{
         return $arr;
     }
 
-    public function Positions()
+    public function PostDesc($pos)
     {
-        $positions = tblPositions::orderBy('id','asc')->get();
-        $posArray = array();
+        $positions = tblPositions::where(['PositionCode' => $pos])->first();
+        
+        $desc = $positions->Description;
 
-        $posArray[""] = "Select Position";
+        return $desc;
+    }
 
-        foreach ($positions as $key => $row) {
-            $posArray[$row->PositionCode] = $row->Description;
-        }
+    public function Branchdesc($branch)
+    {
+        $branches = tblBranches::where(['BranchCode' => $branch])->first();
 
-        return $posArray;
+        $desc = $branches->Description;
+
+        return $desc;
+    }
+
+    public function ManagerName($id)
+    {
+        $manager = tblEmployees::select(
+                   'Name'
+                )
+                ->where(['id'=>$id,'Position' => 'MNGR'])->first();
+
+        $name = isset($manager->Name) ? $manager->Name:'No Manager Assigned';
+        // dd($name);
+
+        return $name;
     }
 
 }

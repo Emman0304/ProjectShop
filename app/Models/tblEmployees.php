@@ -16,6 +16,7 @@ class tblEmployees extends Model
             'LName',
             'FName',
             'MName',
+            'Name',
             'Suffix',
             'Address',
             'Age',

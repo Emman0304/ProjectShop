@@ -91,7 +91,12 @@
       </div>
       <div class="mb-3">
         <label for="exampleInputText" class="form-label">Manager</label>
-        <input name="Manager" type="text" class="form-control" id="Manager" required>
+        <select name="Manager" id="Manager" type="text" class="form-control" required>
+          <option value="">Select Manager</option>
+          @foreach ($managers as $mngr )
+            <option value="{{ $mngr->id }}">{{ $mngr->Name }}</option>
+          @endforeach
+      </select>
       </div>
       <div class="mb-3">
         <label for="exampleInputText" class="form-label">No. of Employees</label>
