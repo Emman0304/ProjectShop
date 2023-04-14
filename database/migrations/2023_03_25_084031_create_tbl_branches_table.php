@@ -18,7 +18,7 @@ class CreateTblBranchesTable extends Migration
             $table->string("BranchCode");
             $table->string("Description");
             $table->string("Address");
-            $table->string("Manager");
+            $table->string("Manager")->nullable();
             $table->integer("NoEmployees");
             $table->timestamps();
         });

@@ -53,7 +53,7 @@ class AdminController extends Controller
             "Address" => "required",
             "Description" => "required",
             "EmployeeCount" => "required|integer",
-            "Manager" => "required",
+            // "Manager" => "required",
             "branchCode" => "required|unique:tbl_branches,BranchCode,".$var->id
         ]);
 

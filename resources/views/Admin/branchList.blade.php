@@ -91,7 +91,7 @@
       </div>
       <div class="mb-3">
         <label for="exampleInputText" class="form-label">Manager</label>
-        <select name="Manager" id="Manager" type="text" class="form-control" required>
+        <select name="Manager" id="Manager" type="text" class="form-control">
           <option value="">Select Manager</option>
           @foreach ($managers as $mngr )
             <option value="{{ $mngr->id }}">{{ $mngr->Name }}</option>
