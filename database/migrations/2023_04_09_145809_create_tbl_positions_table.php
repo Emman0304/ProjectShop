@@ -16,7 +16,9 @@ class CreateTblPositionsTable extends Migration
         Schema::create('tbl_positions', function (Blueprint $table) {
             $table->id();
             $table->string('PositionCode');
+            $table->text('Role')->nullable();
             $table->string('Description');
+            $table->string('created_by');
             $table->timestamps();
         });
     }

@@ -37,6 +37,11 @@ Route::prefix('admin')->group(function() {
     Route::post('/deleteEmployee',[AdminController::class,'deleteEmployee'])->name('deleteEmployee'); 
     Route::post('/addEmployee', [AdminController::class, 'AddEmployee'])->name('AddEmployee');
     Route::post('/editEmployee',[AdminController::class,'editEmployee'])->name('editEmployee');    
+
+    //Positions
+    Route::get('/positions',[AdminController::class,'positionList'])->name('positionList');
+    Route::get('positionTable',[AdminController::class,'PositionTable'])->name('positionTable');
+    Route::post('/addPosition',[AdminController::class,'addPosition'])->name('addPosition');
 });
 
 

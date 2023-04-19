@@ -45,6 +45,11 @@ class AdminController extends Controller
         return view('Admin.EmployeeList',$data);
     }
 
+    public function positionList(Request $request)
+    {
+        return view('Admin.positions');
+    }
+
     public function AddBranch(Request $request)
     {   
         $var = (object) $request->all();
@@ -309,5 +314,76 @@ class AdminController extends Controller
         }
             // dd($result);
         return $result;
+    }
+
+    public function PositionTable(Request $request)
+    {
+        $position = tblPositions::orderBy('id','desc')->get();
+        // dd($position);
+        $positionArray = array();
+        $count=0;
+        
+        foreach ($position as $key => $row) {
+
+            $actionButton = "<div class='btn-group btn-group-sm'>                                           
+                                    <a class='btn btn-success edit' data-id='{$row->id}'><i class='fa fa-edit'></i></a>
+                                    <a class='btn btn-danger delete' data-id='{$row->id}'><i class='fa fa-trash'></i></a>
+                                </div>";
+  
+            $positionArray[$count++] = array(
+                $row->PositionCode,
+                $row->Description,
+                $row->Role,
+                $row->created_by,
+                $actionButton
+            );
+        }
+
+        $result['data'] = $positionArray;
+
+        return  json_encode($result);
+    }
+
+    public function addPosition(Request $request)
+    {
+        $validate = Validator::make($request->all(),[
+            'positionCode' => 'required',
+            'Description' => 'required',
+            'Role' => 'required'
+        ]);
+
+        $return = [
+            'status' => 0,
+            'message' => 'Error Occured'
+        ];
+        
+        if (!$validate->fails()) {
+            $var = (object) $request->all();
+
+            $tosave = [
+                'PositionCode' => $var->positionCode,
+                'Description' => $var->Description,
+                'Role' => $var->Role
+            ];
+
+            if (isset($var->id) && !empty($var->id)) {
+                tblPositions::updateOrCreate(['id' => $var->id],$tosave);    
+                
+                $return = [
+                    'status' => 1,
+                    'message' => 'Updated Successfully.'
+                ];
+            }else{
+                tblPositions::create($tosave);
+
+                $return = [
+                    'status' => 1,
+                    'message' => 'Saved Successfully.'
+                ];
+            }
+
+            return $return;
+        }
+     
     }
 }
