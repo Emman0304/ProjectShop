@@ -25,6 +25,7 @@ class CreateTblEmployeesTable extends Migration
             $table->string('ContactNo');
             $table->string('Email');           
             $table->string('BranchCode');
+            $table->string('user_id');
             $table->string('Position');
             $table->timestamps();
         });

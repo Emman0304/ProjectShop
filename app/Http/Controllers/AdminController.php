@@ -27,7 +27,7 @@ class AdminController extends Controller
     public function BranchList()
     {
         $data['activeBranch'] = 'active';
-        $data['managers'] = tblEmployees::select('id','Name')->where(['Position' => 'MNGR'])->get();
+        $data['managers'] = tblEmployees::select('user_id','Name')->where(['Position' => 'MNGR'])->get();
 
         return view('Admin.branchlist',$data);
     }
@@ -199,7 +199,7 @@ class AdminController extends Controller
                                 </div>";
 
             $employeeArray[$count++] = array(
-                $row->id,
+                $row->user_id,
                 $row->Name,
                 $PosDesc,
                 $branchDesc,
@@ -234,7 +234,9 @@ class AdminController extends Controller
     public function AddEmployee(Request $request)
     {   
         $var = (object) $request->all();
-        
+
+        $AdminClass = new AdminClass;
+    
         $validate = Validator::make($request->all(),[
             "Address" => "required",
             "contactNo" => "required|unique:tbl_employees,ContactNo,".$var->id,
@@ -263,6 +265,11 @@ class AdminController extends Controller
 
         if (!$validate->fails()) {
 
+            $params =[
+                'branch' => $var->branchCode,
+                'position' => $var->Position
+            ];
+
             $tosave=[
                 "BranchCode" => $var->branchCode,
                 "Position" => $var->Position,
@@ -274,7 +281,8 @@ class AdminController extends Controller
                 "Age" => $var->Age,
                 "ContactNo" => $var->contactNo,
                 "Address" => $var->Address,
-                "Email" => $var->email
+                "Email" => $var->email,
+                "user_id" => $AdminClass->IDGen($params)
             ];
             
             if (isset($var->id) && !empty($var->id)) {    

@@ -21,7 +21,8 @@ class tblEmployees extends Model
             'Address',
             'Age',
             'ContactNo',
-            'Email'
+            'Email',
+            'user_id'
         ];
     protected $primaryKey = 'id';
 

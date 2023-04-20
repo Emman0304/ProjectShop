@@ -76,7 +76,7 @@
         <div class="mb-3">
             <input name="id" type="hidden" class="form-control" id="id">
 
-            <label for="exampleInputText" class="form-label">Branch</label>
+            <label for="exampleInputText" class="form-label">Main Branch</label>
             <select name="branchCode" id="branchCode" class="form-control" required>
               <option value="">Select Branch</option>
               @foreach ( $branches as $branch )
