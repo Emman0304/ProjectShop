@@ -260,8 +260,15 @@
               reload();   
             });
           }else{
+            var errors = response.message;
+            var errorMsg = '<ul>';
+            $.each(errors, function (key, value) {
+                errorMsg += '<li>' + value + '</li>';
+            });
+            errorMsg += '</ul>';
+
             Swal.fire(
-              response.message,
+              errorMsg,
               '',
               'warning'
             )

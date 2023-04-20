@@ -25,8 +25,8 @@ class Admin{
     public function PostDesc($pos)
     {
         $positions = tblPositions::where(['PositionCode' => $pos])->first();
-        
-        $desc = $positions->Description;
+
+        $desc = isset($positions->Description) ? $positions->Description:"";
 
         return $desc;
     }
@@ -35,20 +35,16 @@ class Admin{
     {
         $branches = tblBranches::where(['BranchCode' => $branch])->first();
 
-        $desc = $branches->Description;
+        $desc = isset($branches->Description) ? $branches->Description:"";
 
         return $desc;
     }
 
     public function ManagerName($id)
     {
-        $manager = tblEmployees::select(
-                   'Name'
-                )
-                ->where(['id'=>$id,'Position' => 'MNGR'])->first();
+        $manager = tblEmployees::select('Name')->where(['id'=>$id,'Position' => 'MNGR'])->first();
 
         $name = isset($manager->Name) ? $manager->Name:'No Manager Assigned';
-        // dd($name);
 
         return $name;
     }

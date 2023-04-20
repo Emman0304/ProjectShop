@@ -13,6 +13,7 @@ class tblPositions extends Model
     protected $fillable = [
         'PositionCode',
         'Description',
+        'created_by',
         'Role'
     ];
     protected $primaryKey = 'id';

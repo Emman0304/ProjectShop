@@ -206,7 +206,7 @@
             </ul>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="pages/layout/top-nav.html" class="nav-link">
+                <a href="{{ route('positionList') }}" class="nav-link {{ isset($positionActive) ? $positionActive:'' }}">
                   {{-- <i class="far fa-circle nav-icon"></i> --}}
                   <p>Positions</p>
                 </a>

@@ -84,8 +84,8 @@
         <input name="Description" type="text" class="form-control" id="Description" required>
       </div>
       <div class="form-group">
-        <label>Textarea</label>
-        <textarea name="Role" id="Role" class="form-control" rows="3" placeholder="Enter ..."></textarea>
+        <label>Role</label>
+        <textarea name="Role" id="Role" class="form-control" rows="3" placeholder="" required></textarea>
       </div>
       <button id="submit" type="submit" class="btn btn-primary">Save</button>
 
@@ -113,10 +113,9 @@
 
             $(row).find('.edit').unbind('click').on('click',function(){
               id = $(this).attr('data-id');
-
               $.ajax({
                 type: "POST",
-                url: "{{ route('editBranch') }}",
+                url: "{{ route('editPosition') }}",
                 data:{
                   id:id
                 },
@@ -124,12 +123,10 @@
                 success: function (response) {
                   if (response.status > 0) {
                       $('#id').val(response.data.id);
-                      $('#branchCode').val(response.data.BranchCode);
+                      $('#positionCode').val(response.data.PositionCode);
                       $('#Description').val(response.data.Description);
-                      $('#Address').val(response.data.Address);
-                      $('#Manager').val(response.data.Manager);
-                      $('#EmployeeCount').val(response.data.NoEmployees);
-                      $("#exampleModal").modal('show');
+                      $('#Role').val(response.data.Role);
+                      $("#position").modal('show');
                     }
                 }
               });
@@ -152,7 +149,7 @@
                     
                   $.ajax({
                       type: "POST",
-                      url: "{{ route('deleteBranch') }}",
+                      url: "{{ route('deletePosition') }}",
                       data: {
                         id:id
                       },
@@ -200,8 +197,15 @@
               reload();   
             });
           }else{
+            var errors = response.message;
+            var errorMsg = '<ul>';
+            $.each(errors, function (key, value) {
+                errorMsg += '<li>' + value + '</li>';
+            });
+            errorMsg += '</ul>';
+
             Swal.fire(
-              response.message,
+              errorMsg,
               '',
               'warning'
             )

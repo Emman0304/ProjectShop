@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Classes\Admin as AdminClass;
 use App\Models\tblEmployees;
 use App\Models\tblPositions;
+use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
@@ -33,8 +34,6 @@ class AdminController extends Controller
 
     public function employeeList()
     {
-        $AdminClass = new AdminClass;
-        
 
         $data['EmpfileActive'] = 'active';
         $data['listActive'] = 'active';
@@ -47,7 +46,11 @@ class AdminController extends Controller
 
     public function positionList(Request $request)
     {
-        return view('Admin.positions');
+        $data['EmpfileActive'] = 'active';
+        $data['positionActive'] = 'active';
+        $data['menu'] = 'menu-open';
+
+        return view('Admin.positions',$data);
     }
 
     public function AddBranch(Request $request)
@@ -58,13 +61,12 @@ class AdminController extends Controller
             "Address" => "required",
             "Description" => "required",
             "EmployeeCount" => "required|integer",
-            // "Manager" => "required",
             "branchCode" => "required|unique:tbl_branches,BranchCode,".$var->id
         ]);
 
         $return =[
             "status" =>0,
-            "message" =>'Branch Code Already Exist.'
+            "message" =>$validate->errors()->all()
         ];
 
         if (!$validate->fails()) {
@@ -163,7 +165,7 @@ class AdminController extends Controller
 
         $return = [
             'status' => 0,
-            'message' => "An Error Occured"
+            'message' => "Error Occured."
         ];
 
         if (isset($var->id) && !empty($var->id)) {
@@ -171,30 +173,30 @@ class AdminController extends Controller
 
             $return = [
                 'status' => 1,
-                'message' => "Deleted Succesfully"
+                'message' => "Deleted Succesfully."
             ];
         }
         
         return $return;
     }
+
     public function employeeTable(Request $request)
     {
         $employee = tblEmployees::orderBy('id','desc')->get();
         $employeeArray = array();
         $count=0;
         
+        $AdminClass = new AdminClass;
+
         foreach ($employee as $key => $row) {
+
+            $PosDesc = $AdminClass->PostDesc($row->Position);
+            $branchDesc = $AdminClass->Branchdesc($row->BranchCode);
 
             $actionButton = "<div class='btn-group btn-group-sm'>                                           
                                     <a class='btn btn-success edit' data-id='{$row->id}'><i class='fa fa-edit'></i></a>
                                     <a class='btn btn-danger delete' data-id='{$row->id}'><i class='fa fa-trash'></i></a>
                                 </div>";
-            $MName = isset($row->MName) ? $row->MName:'';
-            $Suffix = isset($row->Suffix) ? $row->Suffix:'';
-
-            $AdminClass = new AdminClass;
-            $PosDesc = $AdminClass->PostDesc($row->Position);
-            $branchDesc = $AdminClass->Branchdesc($row->BranchCode);
 
             $employeeArray[$count++] = array(
                 $row->id,
@@ -215,7 +217,7 @@ class AdminController extends Controller
 
         $return = [
             'status' => 0,
-            'message' => "An Error Occured"
+            'message' => "Error Occured."
         ];
 
         if (isset($var->id) && !empty($var->id)) {
@@ -223,7 +225,7 @@ class AdminController extends Controller
 
             $return = [
                 'status' => 1,
-                'message' => "Deleted Succesfully"
+                'message' => "Deleted Succesfully."
             ];
         }
         
@@ -246,7 +248,7 @@ class AdminController extends Controller
 
         $return =[
             "status" =>0,
-            "message" =>'Email or Contact No. already taken.'
+            "message" =>$validate->errors()->all()
         ];
 
         if (isset($var->MName) && !empty($var->MName) && isset($var->Suffix) && !empty($var->Suffix)) {
@@ -300,7 +302,7 @@ class AdminController extends Controller
         $var = (object) $request->all();
    
         $result=[
-            'data' => "",
+            'data' => "Error Occured.",
             'status' => 0
         ];
         
@@ -312,7 +314,7 @@ class AdminController extends Controller
                 'status' => 1
             ];    
         }
-            // dd($result);
+
         return $result;
     }
 
@@ -346,24 +348,26 @@ class AdminController extends Controller
 
     public function addPosition(Request $request)
     {
+        $var = (object) $request->all();
+
         $validate = Validator::make($request->all(),[
-            'positionCode' => 'required',
+            'positionCode' => 'required|unique:tbl_positions,PositionCode,'.$var->id,
             'Description' => 'required',
             'Role' => 'required'
         ]);
 
         $return = [
             'status' => 0,
-            'message' => 'Error Occured'
+            'message' => $validate->errors()->all()
         ];
-        
-        if (!$validate->fails()) {
-            $var = (object) $request->all();
 
+        if (!$validate->fails()) {
+            
             $tosave = [
                 'PositionCode' => $var->positionCode,
                 'Description' => $var->Description,
-                'Role' => $var->Role
+                'Role' => $var->Role,
+                'created_by' => Auth::user()->name
             ];
 
             if (isset($var->id) && !empty($var->id)) {
@@ -380,10 +384,51 @@ class AdminController extends Controller
                     'status' => 1,
                     'message' => 'Saved Successfully.'
                 ];
-            }
-
-            return $return;
+            }   
         }
-     
+
+        return response()->json($return);
+    }
+
+    public function editPosition(Request $request){
+
+        $var = (object) $request->all();
+
+        $result=[
+            'data' => "Error Occured.",
+            'status' => 0
+        ];
+        
+        $position = tblPositions::where(['id' => $var->id])->first();
+
+        if (!empty($position)) {
+            $result=[
+                'data' => $position,
+                'status' => 1
+            ];    
+        }
+
+        return $result;
+    }
+
+    public function deletePosition(Request $request)
+    {
+        $var = (object) $request->all();
+
+        $return = [
+            'status' => 0,
+            'message' => "Error Occured."
+        ];
+
+        if (isset($var->id) && !empty($var->id)) {
+            tblPositions::where(['id' => $var->id])->first()->delete();
+
+            $return = [
+                'status' => 1,
+                'message' => "Deleted Succesfully."
+            ];
+        }
+        
+        return $return;
     }
 }
