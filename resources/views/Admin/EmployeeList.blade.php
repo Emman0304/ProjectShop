@@ -232,6 +232,15 @@
                 }
               })         
             });   
+
+            $(row).find('.view').unbind('click').on('click',function(){
+              id = $(this).attr('data-id');
+              url = "{{ url('/global/profile') }}";
+              encodedID = btoa(id);
+              window.location.href = url+'/'+encodedID;
+
+            });
+
           }
         });
     

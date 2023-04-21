@@ -194,8 +194,9 @@ class AdminController extends Controller
             $branchDesc = $AdminClass->Branchdesc($row->BranchCode);
 
             $actionButton = "<div class='btn-group btn-group-sm'>                                           
-                                    <a class='btn btn-success edit' data-id='{$row->id}'><i class='fa fa-edit'></i></a>
-                                    <a class='btn btn-danger delete' data-id='{$row->id}'><i class='fa fa-trash'></i></a>
+                                    <a class='btn btn-success edit' data-id='{$row->user_id}'><i class='fa fa-edit'></i></a>
+                                    <a class='btn btn-danger delete' data-id='{$row->user_id}'><i class='fa fa-trash'></i></a>
+                                    <a class='btn btn-success view' data-id='{$row->user_id}'><i class='fa fa-eye'></i></a>
                                 </div>";
 
             $employeeArray[$count++] = array(
@@ -314,7 +315,7 @@ class AdminController extends Controller
             'status' => 0
         ];
         
-        $employee = tblEmployees::where(['id' => $var->id])->first();
+        $employee = tblEmployees::where(['user_id' => $var->id])->first();
 
         if (!empty($employee)) {
             $result=[

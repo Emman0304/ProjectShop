@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\GlobalController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,6 +45,11 @@ Route::prefix('admin')->group(function() {
     Route::post('/addPosition',[AdminController::class,'addPosition'])->name('addPosition');
     Route::post('/editPosition',[AdminController::class,'editPosition'])->name('editPosition');   
     Route::post('/deletePosition',[AdminController::class,'deletePosition'])->name('deletePosition'); 
+});
+
+Route::prefix('global')->group(function(){
+    //profile
+    Route::get('/profile/{id}',[GlobalController::class,'Profile'])->name('profile');
 });
 
 
