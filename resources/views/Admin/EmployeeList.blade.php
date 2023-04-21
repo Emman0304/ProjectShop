@@ -56,7 +56,7 @@
                                 <th>ID No.</th>
                                 <th>Name</th>
                                 <th>Position</th>
-                                <th>Branch</th>
+                                <th>Main Branch</th>
                                 <th></th>
                             </tr>
                             </thead>
