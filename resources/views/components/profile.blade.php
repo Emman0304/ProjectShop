@@ -31,7 +31,7 @@
             <div class="card card-primary card-outline">
               <div class="card-body box-profile">
                 <div class="text-center">
-                  <img class="profile-user-img img-fluid img-circle" src="../../dist/img/user4-128x128.jpg" alt="User profile picture">
+                  <img class="profile-user-img img-fluid img-circle" src="{{ !empty($imgData) ? $imgData:"../../dist/img/user4-128x128.jpg"}}" alt="User profile picture">
                 </div>
 
                 <h3 class="profile-username text-center">{{ $data->Name }}</h3>
@@ -50,7 +50,7 @@
                   </li>
                 </ul>
 
-                <a href="#" class="btn btn-primary btn-block"><b>Follow</b></a>
+                <a href="#" class="btn btn-primary btn-block" data-toggle="modal" data-target="#uploadProf" ><b>Upload Image</b></a>
               </div>
               <!-- /.card-body -->
             </div>
@@ -381,4 +381,79 @@
     </section>
     <!-- /.content -->
   </div>
+
+  @component('components.modal',['modal_id' => 'uploadProf','title' => 'Upload Image','form_id' => 'uploadProfForm', 'enctype' => 'multipart/form-data'])
+  
+  <div class="row">
+		<div class="col col-md-12">
+			<div class="form-group">
+				<label>Upload file</label>
+				<input type="file" name="image" id="image" class="form-control">
+			</div>
+		</div>
+	</div>
+  <button type="submit" class="btn btn-primary" >Upload</button>
+
+  @endcomponent
+
+@endsection
+
+@section('scripts')
+
+  <script>
+    $(document).ready(function () {
+
+      $('#uploadProfForm').on('submit', function (e) {
+        e.preventDefault();
+        
+        var fileInput = document.getElementById('image');
+        var file = fileInput.files[0];
+        var id = "{{ $id }}";
+
+        var formData = new FormData();
+        formData.append('file', file);
+        formData.append('id', id);
+
+        //if Arraw form_data
+        // formData = $.extend({},formData,{ user_id:"{{$id}}"});
+
+        $.ajax({
+          url:"{{ route('uploadProf') }}",
+          type: 'POST',
+          data: formData,
+          
+          // dataType: 'json',
+          processData: false,
+          contentType: false,
+          success: function(response) {
+            console.log(response);
+            if (response.status > 0) {
+              Swal.fire(
+                response.message,
+                '',
+                'success'
+              ).then((ok) => {
+                $("#exampleModal").modal('hide');
+                // reload();   
+              });
+            }
+
+            
+            // swal({
+            //   title: response.status > 0 ? "SUCCESS" : "ERROR",
+            //   text: response.message,
+            //   icon: response.status > 0 ? "success" : "error",
+            // }).then((result) => {
+            //   if(response.status > 0){
+            //     $('#uploadProf').modal('hide');
+            //     // display_course_fees();
+            //   } 
+            // });
+          },
+        });
+      });
+
+    });
+  </script>
+
 @endsection

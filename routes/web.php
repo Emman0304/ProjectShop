@@ -50,6 +50,7 @@ Route::prefix('admin')->group(function() {
 Route::prefix('global')->group(function(){
     //profile
     Route::get('/profile/{id}',[GlobalController::class,'Profile'])->name('profile');
+    Route::post('/uploadProf',[GlobalController::class,'uploadImage'])->name('uploadProf');
 });
 
 
