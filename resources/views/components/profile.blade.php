@@ -31,7 +31,7 @@
             <div class="card card-primary card-outline">
               <div class="card-body box-profile">
                 <div class="text-center">
-                  <img class="profile-user-img img-fluid img-circle" src="{{ !empty($imgData) ? $imgData:"../../dist/img/user4-128x128.jpg"}}" alt="User profile picture">
+                  <img class="profile-user-img img-fluid img-circle" src="{{ !empty($imgData) ? $imgData:"../../dist/img/default.png"}}" alt="User profile picture">
                 </div>
 
                 <h3 class="profile-username text-center">{{ $data->Name }}</h3>
@@ -414,14 +414,13 @@
         formData.append('file', file);
         formData.append('id', id);
 
-        //if Arraw form_data
+        //if Array form_data
         // formData = $.extend({},formData,{ user_id:"{{$id}}"});
 
         $.ajax({
           url:"{{ route('uploadProf') }}",
           type: 'POST',
           data: formData,
-          
           // dataType: 'json',
           processData: false,
           contentType: false,
@@ -433,25 +432,35 @@
                 '',
                 'success'
               ).then((ok) => {
-                $("#exampleModal").modal('hide');
-                // reload();   
+                $("#uploadProf").modal('hide');
+                  imgReload(response.newImgSrc);
               });
-            }
+            }else{
+              var errors = response.message;
+              var errorMsg = '<ul>';
+              $.each(errors, function (key, value) {
+                  errorMsg += '<li>' + value + '</li>';
+              });
+              errorMsg += '</ul>';
 
-            
-            // swal({
-            //   title: response.status > 0 ? "SUCCESS" : "ERROR",
-            //   text: response.message,
-            //   icon: response.status > 0 ? "success" : "error",
-            // }).then((result) => {
-            //   if(response.status > 0){
-            //     $('#uploadProf').modal('hide');
-            //     // display_course_fees();
-            //   } 
-            // });
+              Swal.fire(
+                errorMsg,
+                '',
+                'warning'
+              )
+            }
           },
         });
       });
+
+      $('#uploadProf').on('hide.bs.modal', function () {
+          $('#image').val('');
+        });
+
+      function imgReload(newImgSrc){
+        var src = newImgSrc;
+        $('.profile-user-img').attr('src',src);
+      }
 
     });
   </script>
