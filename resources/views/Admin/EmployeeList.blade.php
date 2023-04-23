@@ -56,7 +56,7 @@
                                 <th>ID No.</th>
                                 <th>Name</th>
                                 <th>Position</th>
-                                <th>Branch</th>
+                                <th>Main Branch</th>
                                 <th></th>
                             </tr>
                             </thead>
@@ -76,7 +76,7 @@
         <div class="mb-3">
             <input name="id" type="hidden" class="form-control" id="id">
 
-            <label for="exampleInputText" class="form-label">Branch</label>
+            <label for="exampleInputText" class="form-label">Main Branch</label>
             <select name="branchCode" id="branchCode" class="form-control" required>
               <option value="">Select Branch</option>
               @foreach ( $branches as $branch )
@@ -232,6 +232,15 @@
                 }
               })         
             });   
+
+            $(row).find('.view').unbind('click').on('click',function(){
+              id = $(this).attr('data-id');
+              url = "{{ url('/global/profile') }}";
+              encodedID = btoa(id);
+              window.location.href = url+'/'+encodedID;
+
+            });
+
           }
         });
     
@@ -260,8 +269,15 @@
               reload();   
             });
           }else{
+            var errors = response.message;
+            var errorMsg = '<ul>';
+            $.each(errors, function (key, value) {
+                errorMsg += '<li>' + value + '</li>';
+            });
+            errorMsg += '</ul>';
+
             Swal.fire(
-              response.message,
+              errorMsg,
               '',
               'warning'
             )

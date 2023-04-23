@@ -25,8 +25,8 @@ class Admin{
     public function PostDesc($pos)
     {
         $positions = tblPositions::where(['PositionCode' => $pos])->first();
-        
-        $desc = $positions->Description;
+
+        $desc = isset($positions->Description) ? $positions->Description:"";
 
         return $desc;
     }
@@ -35,22 +35,42 @@ class Admin{
     {
         $branches = tblBranches::where(['BranchCode' => $branch])->first();
 
-        $desc = $branches->Description;
+        $desc = isset($branches->Description) ? $branches->Description:"";
 
         return $desc;
     }
 
     public function ManagerName($id)
     {
-        $manager = tblEmployees::select(
-                   'Name'
-                )
-                ->where(['id'=>$id,'Position' => 'MNGR'])->first();
+        $manager = tblEmployees::select('Name')->where(['user_id'=>$id,'Position' => 'MNGR'])->first();
 
         $name = isset($manager->Name) ? $manager->Name:'No Manager Assigned';
-        // dd($name);
 
         return $name;
+    }
+
+    public function IDGen($params)
+    {
+        $var = (object) $params;
+        $zeros = 6;
+        $checkID = tblEmployees::where(['BranchCode' => $var->branch,'Position' => $var->position])
+                    ->orderBy('id','desc')
+                    ->first();
+
+        $lastID = isset($checkID->user_id) ? $checkID->user_id:"";
+
+        if (!empty($lastID)) {
+            $explodeID = explode("-",$lastID);
+            $incrementID = $explodeID[1]+1;
+            $number = sprintf("%0{$zeros}d", $incrementID);
+        }else{
+            $incrementID = 0+1;
+            $number = sprintf("%0{$zeros}d", $incrementID);
+        }
+
+        $ID = $var->branch.$var->position."-".$number;
+        
+        return $ID;
     }
 
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTblPositionsTable extends Migration
+class CreateTblFilesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,13 @@ class CreateTblPositionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('tbl_positions', function (Blueprint $table) {
+        Schema::create('tbl_files', function (Blueprint $table) {
             $table->id();
-            $table->string('PositionCode');
-            $table->text('Role')->nullable();
-            $table->string('Description');
-            $table->string('created_by');
+            $table->string('user_id');
+            $table->string('name');
+            $table->string('type');
+            $table->string('size');
+            $table->binary('data',16777215);
             $table->timestamps();
         });
     }
@@ -30,6 +31,6 @@ class CreateTblPositionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tbl_positions');
+        Schema::dropIfExists('tbl_files');
     }
 }

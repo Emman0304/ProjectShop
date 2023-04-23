@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Classes\Admin as AdminClass;
 use App\Models\tblEmployees;
 use App\Models\tblPositions;
+use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
@@ -26,15 +27,13 @@ class AdminController extends Controller
     public function BranchList()
     {
         $data['activeBranch'] = 'active';
-        $data['managers'] = tblEmployees::select('id','Name')->where(['Position' => 'MNGR'])->get();
+        $data['managers'] = tblEmployees::select('user_id','Name')->where(['Position' => 'MNGR'])->get();
 
         return view('Admin.branchlist',$data);
     }
 
     public function employeeList()
     {
-        $AdminClass = new AdminClass;
-        
 
         $data['EmpfileActive'] = 'active';
         $data['listActive'] = 'active';
@@ -45,6 +44,15 @@ class AdminController extends Controller
         return view('Admin.EmployeeList',$data);
     }
 
+    public function positionList(Request $request)
+    {
+        $data['EmpfileActive'] = 'active';
+        $data['positionActive'] = 'active';
+        $data['menu'] = 'menu-open';
+
+        return view('Admin.positions',$data);
+    }
+
     public function AddBranch(Request $request)
     {   
         $var = (object) $request->all();
@@ -53,13 +61,12 @@ class AdminController extends Controller
             "Address" => "required",
             "Description" => "required",
             "EmployeeCount" => "required|integer",
-            "Manager" => "required",
             "branchCode" => "required|unique:tbl_branches,BranchCode,".$var->id
         ]);
 
         $return =[
             "status" =>0,
-            "message" =>'Branch Code Already Exist.'
+            "message" =>$validate->errors()->all()
         ];
 
         if (!$validate->fails()) {
@@ -158,7 +165,7 @@ class AdminController extends Controller
 
         $return = [
             'status' => 0,
-            'message' => "An Error Occured"
+            'message' => "Error Occured."
         ];
 
         if (isset($var->id) && !empty($var->id)) {
@@ -166,33 +173,34 @@ class AdminController extends Controller
 
             $return = [
                 'status' => 1,
-                'message' => "Deleted Succesfully"
+                'message' => "Deleted Succesfully."
             ];
         }
         
         return $return;
     }
+
     public function employeeTable(Request $request)
     {
         $employee = tblEmployees::orderBy('id','desc')->get();
         $employeeArray = array();
         $count=0;
         
+        $AdminClass = new AdminClass;
+
         foreach ($employee as $key => $row) {
 
-            $actionButton = "<div class='btn-group btn-group-sm'>                                           
-                                    <a class='btn btn-success edit' data-id='{$row->id}'><i class='fa fa-edit'></i></a>
-                                    <a class='btn btn-danger delete' data-id='{$row->id}'><i class='fa fa-trash'></i></a>
-                                </div>";
-            $MName = isset($row->MName) ? $row->MName:'';
-            $Suffix = isset($row->Suffix) ? $row->Suffix:'';
-
-            $AdminClass = new AdminClass;
             $PosDesc = $AdminClass->PostDesc($row->Position);
             $branchDesc = $AdminClass->Branchdesc($row->BranchCode);
 
+            $actionButton = "<div class='btn-group btn-group-sm'>                                           
+                                    <a class='btn btn-success edit' data-id='{$row->user_id}'><i class='fa fa-edit'></i></a>
+                                    <a class='btn btn-danger delete' data-id='{$row->user_id}'><i class='fa fa-trash'></i></a>
+                                    <a class='btn btn-success view' data-id='{$row->user_id}'><i class='fa fa-eye'></i></a>
+                                </div>";
+
             $employeeArray[$count++] = array(
-                $row->id,
+                $row->user_id,
                 $row->Name,
                 $PosDesc,
                 $branchDesc,
@@ -210,7 +218,7 @@ class AdminController extends Controller
 
         $return = [
             'status' => 0,
-            'message' => "An Error Occured"
+            'message' => "Error Occured."
         ];
 
         if (isset($var->id) && !empty($var->id)) {
@@ -218,7 +226,7 @@ class AdminController extends Controller
 
             $return = [
                 'status' => 1,
-                'message' => "Deleted Succesfully"
+                'message' => "Deleted Succesfully."
             ];
         }
         
@@ -227,7 +235,9 @@ class AdminController extends Controller
     public function AddEmployee(Request $request)
     {   
         $var = (object) $request->all();
-        
+
+        $AdminClass = new AdminClass;
+    
         $validate = Validator::make($request->all(),[
             "Address" => "required",
             "contactNo" => "required|unique:tbl_employees,ContactNo,".$var->id,
@@ -241,7 +251,7 @@ class AdminController extends Controller
 
         $return =[
             "status" =>0,
-            "message" =>'Email or Contact No. already taken.'
+            "message" =>$validate->errors()->all()
         ];
 
         if (isset($var->MName) && !empty($var->MName) && isset($var->Suffix) && !empty($var->Suffix)) {
@@ -256,6 +266,11 @@ class AdminController extends Controller
 
         if (!$validate->fails()) {
 
+            $params =[
+                'branch' => $var->branchCode,
+                'position' => $var->Position
+            ];
+
             $tosave=[
                 "BranchCode" => $var->branchCode,
                 "Position" => $var->Position,
@@ -267,7 +282,8 @@ class AdminController extends Controller
                 "Age" => $var->Age,
                 "ContactNo" => $var->contactNo,
                 "Address" => $var->Address,
-                "Email" => $var->email
+                "Email" => $var->email,
+                "user_id" => $AdminClass->IDGen($params)
             ];
             
             if (isset($var->id) && !empty($var->id)) {    
@@ -295,11 +311,11 @@ class AdminController extends Controller
         $var = (object) $request->all();
    
         $result=[
-            'data' => "",
+            'data' => "Error Occured.",
             'status' => 0
         ];
         
-        $employee = tblEmployees::where(['id' => $var->id])->first();
+        $employee = tblEmployees::where(['user_id' => $var->id])->first();
 
         if (!empty($employee)) {
             $result=[
@@ -307,7 +323,121 @@ class AdminController extends Controller
                 'status' => 1
             ];    
         }
-            // dd($result);
+
         return $result;
+    }
+
+    public function PositionTable(Request $request)
+    {
+        $position = tblPositions::orderBy('id','desc')->get();
+        // dd($position);
+        $positionArray = array();
+        $count=0;
+        
+        foreach ($position as $key => $row) {
+
+            $actionButton = "<div class='btn-group btn-group-sm'>                                           
+                                    <a class='btn btn-success edit' data-id='{$row->id}'><i class='fa fa-edit'></i></a>
+                                    <a class='btn btn-danger delete' data-id='{$row->id}'><i class='fa fa-trash'></i></a>
+                                </div>";
+  
+            $positionArray[$count++] = array(
+                $row->PositionCode,
+                $row->Description,
+                $row->Role,
+                $row->created_by,
+                $actionButton
+            );
+        }
+
+        $result['data'] = $positionArray;
+
+        return  json_encode($result);
+    }
+
+    public function addPosition(Request $request)
+    {
+        $var = (object) $request->all();
+
+        $validate = Validator::make($request->all(),[
+            'positionCode' => 'required|unique:tbl_positions,PositionCode,'.$var->id,
+            'Description' => 'required',
+            'Role' => 'required'
+        ]);
+
+        $return = [
+            'status' => 0,
+            'message' => $validate->errors()->all()
+        ];
+
+        if (!$validate->fails()) {
+            
+            $tosave = [
+                'PositionCode' => $var->positionCode,
+                'Description' => $var->Description,
+                'Role' => $var->Role,
+                'created_by' => Auth::user()->name
+            ];
+
+            if (isset($var->id) && !empty($var->id)) {
+                tblPositions::updateOrCreate(['id' => $var->id],$tosave);    
+                
+                $return = [
+                    'status' => 1,
+                    'message' => 'Updated Successfully.'
+                ];
+            }else{
+                tblPositions::create($tosave);
+
+                $return = [
+                    'status' => 1,
+                    'message' => 'Saved Successfully.'
+                ];
+            }   
+        }
+
+        return response()->json($return);
+    }
+
+    public function editPosition(Request $request){
+
+        $var = (object) $request->all();
+
+        $result=[
+            'data' => "Error Occured.",
+            'status' => 0
+        ];
+        
+        $position = tblPositions::where(['id' => $var->id])->first();
+
+        if (!empty($position)) {
+            $result=[
+                'data' => $position,
+                'status' => 1
+            ];    
+        }
+
+        return $result;
+    }
+
+    public function deletePosition(Request $request)
+    {
+        $var = (object) $request->all();
+
+        $return = [
+            'status' => 0,
+            'message' => "Error Occured."
+        ];
+
+        if (isset($var->id) && !empty($var->id)) {
+            tblPositions::where(['id' => $var->id])->first()->delete();
+
+            $return = [
+                'status' => 1,
+                'message' => "Deleted Succesfully."
+            ];
+        }
+        
+        return $return;
     }
 }

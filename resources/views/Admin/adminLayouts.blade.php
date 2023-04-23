@@ -37,9 +37,9 @@
 <div class="wrapper">
 
   <!-- Preloader -->
-  <div class="preloader flex-column justify-content-center align-items-center">
+  {{-- <div class="preloader flex-column justify-content-center align-items-center">
     <img class="animation__shake" src=" {{ asset('dist/img/AdminLTELogo.png') }} " alt="AdminLTELogo" height="60" width="60">
-  </div>
+  </div> --}}
 
   <!-- Navbar -->
   <nav class="main-header navbar navbar-expand navbar-white navbar-light">
@@ -143,6 +143,16 @@
           <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
         </div>
       </li>
+
+      <a class="dropdown-item" href="{{ route('logout') }}"
+          onclick="event.preventDefault();
+            document.getElementById('logout-form').submit();">
+          {{ __('Logout') }}
+      </a>
+
+      <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+          @csrf
+      </form>
     </ul>
   </nav>
   <!-- /.navbar -->
@@ -206,7 +216,7 @@
             </ul>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="pages/layout/top-nav.html" class="nav-link">
+                <a href="{{ route('positionList') }}" class="nav-link {{ isset($positionActive) ? $positionActive:'' }}">
                   {{-- <i class="far fa-circle nav-icon"></i> --}}
                   <p>Positions</p>
                 </a>
@@ -220,6 +230,14 @@
                 </a>
               </li>
             </ul>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              {{-- <i class="nav-icon fas fa-th"></i> --}}
+              <p>
+                User Accounts
+              </p>
+            </a>
           </li>
         </ul>
       </nav>

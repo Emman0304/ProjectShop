@@ -24,7 +24,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Branch List</h1>
+            <h1 class="m-0">Positions/Roles</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -44,21 +44,19 @@
                     <div class="card-header">
                         {{-- <h3 class="card-title">List of Branches</h3> --}}
                         <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-primary float-sm-right" data-toggle="modal" data-target="#exampleModal">
-                          Add Branch
+                        <button type="button" class="btn btn-primary float-sm-right" data-toggle="modal" data-target="#position">
+                          Create Position
                         </button>
                       </div>
                       <div class="card-body" style="overflow-x:auto;">
                         <div class="table-responsive">
-                          <table id="example1" class="table table-bordered table-striped">
+                          <table id="positions" class="table table-bordered table-striped">
                             <thead>
                               <tr>
-                                <th>Branch ID</th>
-                                <th>Branch Code</th>
+                                <th>Position Code</th>
                                 <th>Description</th>
-                                <th>Address</th>
-                                <th>Manager</th>
-                                <th>No. of Employees</th>
+                                <th>Role</th>
+                                <th>Created By</th>
                                 <th></th>
                               </tr>
                             </thead>
@@ -73,34 +71,21 @@
         </div>
     </section>
 
-    @component('components.modal',['modal_id' => 'exampleModal','title' => 'Add New Branch','form_id' => 'addBranch'  ])
+    @component('components.modal',['modal_id' => 'position','title' => 'Add Position/Role','form_id' => 'addPosition'  ])
       
       <div class="mb-3">
         <input name="id" type="hidden" class="form-control" id="id">
 
-        <label for="exampleInputText" class="form-label">Branch Code</label>
-        <input name="branchCode" type="text" class="form-control" id="branchCode" required>
+        <label for="exampleInputText" class="form-label">Position Code</label>
+        <input name="positionCode" type="text" class="form-control" id="positionCode" required>
       </div>
       <div class="mb-3">
         <label for="exampleInputText" class="form-label">Description</label>
         <input name="Description" type="text" class="form-control" id="Description" required>
       </div>
-      <div class="mb-3">
-        <label for="exampleInputText" class="form-label">Address</label>
-        <input name="Address" type="text" class="form-control" id="Address" required>
-      </div>
-      <div class="mb-3">
-        <label for="exampleInputText" class="form-label">Manager</label>
-        <select name="Manager" id="Manager" type="text" class="form-control">
-          <option value="">Select Manager</option>
-          @foreach ($managers as $mngr )
-            <option value="{{ $mngr->user_id }}">{{ $mngr->Name }}</option>
-          @endforeach
-      </select>
-      </div>
-      <div class="mb-3">
-        <label for="exampleInputText" class="form-label">No. of Employees</label>
-        <input name="EmployeeCount" type="number" class="form-control" id="EmployeeCount" required>
+      <div class="form-group">
+        <label>Role</label>
+        <textarea name="Role" id="Role" class="form-control" rows="3" placeholder="" required></textarea>
       </div>
       <button id="submit" type="submit" class="btn btn-primary">Save</button>
 
@@ -116,10 +101,10 @@
 
   $(document).ready(function () {
   
-        var dtable = $("#example1").DataTable({
+        var dtable = $("#positions").DataTable({
           processing: true,
           serverside:true,
-          ajax: "{{ route('branchTable') }}",
+          ajax: "{{ route('positionTable') }}",
           // responsive: true, 
           lengthChange: false, 
           autoWidth: false,
@@ -128,10 +113,9 @@
 
             $(row).find('.edit').unbind('click').on('click',function(){
               id = $(this).attr('data-id');
-
               $.ajax({
                 type: "POST",
-                url: "{{ route('editBranch') }}",
+                url: "{{ route('editPosition') }}",
                 data:{
                   id:id
                 },
@@ -139,12 +123,10 @@
                 success: function (response) {
                   if (response.status > 0) {
                       $('#id').val(response.data.id);
-                      $('#branchCode').val(response.data.BranchCode);
+                      $('#positionCode').val(response.data.PositionCode);
                       $('#Description').val(response.data.Description);
-                      $('#Address').val(response.data.Address);
-                      $('#Manager').val(response.data.Manager);
-                      $('#EmployeeCount').val(response.data.NoEmployees);
-                      $("#exampleModal").modal('show');
+                      $('#Role').val(response.data.Role);
+                      $("#position").modal('show');
                     }
                 }
               });
@@ -167,7 +149,7 @@
                     
                   $.ajax({
                       type: "POST",
-                      url: "{{ route('deleteBranch') }}",
+                      url: "{{ route('deletePosition') }}",
                       data: {
                         id:id
                       },
@@ -195,13 +177,13 @@
         }
 
 
-    $('#addBranch').submit(function (e) { 
+    $('#addPosition').submit(function (e) { 
       e.preventDefault();
-      var form_data = $("#addBranch").serializeArray();
+      var form_data = $("#addPosition").serializeArray();
 
       $.ajax({
       type: "POST",
-      url: "{{ route('addBranch') }}",
+      url: "{{ route('addPosition') }}",
       data: form_data,
         // dataType: "dataType",
         success: function (response) {
@@ -211,7 +193,7 @@
               '',
               'success'
             ).then((ok) => {
-              $("#exampleModal").modal('hide');
+              $("#position").modal('hide');
               reload();   
             });
           }else{
@@ -233,13 +215,11 @@
     });
 
 
-    $('#exampleModal').on('hide.bs.modal', function () {
+    $('#position').on('hide.bs.modal', function () {
           $('#id').val('');
-          $('#branchCode').val('');
+          $('#positionCode').val('');
           $('#Description').val('');
-          $('#Address').val('');
-          $('#Manager').val('');
-          $('#EmployeeCount').val('');
+          $('#Role').val('');
         });
 
 

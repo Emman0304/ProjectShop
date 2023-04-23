@@ -9,7 +9,7 @@
           </button>
         </div>
         <div class="modal-body">
-          <form id="{{ isset($form_id) ? $form_id:'' }}" method="POST">      
+          <form id="{{ isset($form_id) ? $form_id:'' }}" method="POST" enctype="{{ isset($enctype) ? $enctype:"" }}">      
             {{ $slot }}    
       </div>
       <div class="modal-footer">

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\GlobalController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,7 +17,7 @@ use App\Http\Controllers\AdminController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 Auth::routes();
@@ -37,6 +38,19 @@ Route::prefix('admin')->group(function() {
     Route::post('/deleteEmployee',[AdminController::class,'deleteEmployee'])->name('deleteEmployee'); 
     Route::post('/addEmployee', [AdminController::class, 'AddEmployee'])->name('AddEmployee');
     Route::post('/editEmployee',[AdminController::class,'editEmployee'])->name('editEmployee');    
+
+    //Positions
+    Route::get('/positions',[AdminController::class,'positionList'])->name('positionList');
+    Route::get('positionTable',[AdminController::class,'PositionTable'])->name('positionTable');
+    Route::post('/addPosition',[AdminController::class,'addPosition'])->name('addPosition');
+    Route::post('/editPosition',[AdminController::class,'editPosition'])->name('editPosition');   
+    Route::post('/deletePosition',[AdminController::class,'deletePosition'])->name('deletePosition'); 
+});
+
+Route::prefix('global')->group(function(){
+    //profile
+    Route::get('/profile/{id}',[GlobalController::class,'Profile'])->name('profile');
+    Route::post('/uploadProf',[GlobalController::class,'uploadImage'])->name('uploadProf');
 });
 
 
