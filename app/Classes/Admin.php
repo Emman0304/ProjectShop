@@ -73,4 +73,56 @@ class Admin{
         return $ID;
     }
 
+    public function ManagersDropdown($params)
+    {
+        $employees = tblEmployees::select('user_id','Name')->where(['Position' => 'MNGR'])->get();
+
+        $result='';
+        if($params['addBlank']) $result = '<option value="">Select Manager</option>';
+        
+        if (isset($employees) && !empty($employees)) {
+            foreach ($employees as $key => $row) {
+                $Desc = strtoupper($row->Name);
+                $result .= "<option value=\"{$row->user_id}\">{$Desc}</option>";
+            }
+        }
+        
+        return $result;
+    }
+
+    public function BranchDropdown($params)
+    {
+        $branches = tblBranches::select('BranchCode','Description')->get();
+        
+        $result='';
+        if($params['addBlank']) $result = '<option value="">Select Branch</option>';
+        
+        if (isset($branches) && !empty($branches)) {
+            foreach ($branches as $key => $row) {
+                $Desc = strtoupper($row->Description);
+                $result .= "<option value=\"{$row->BranchCode}\">{$Desc}</option>";
+            }
+        }
+        
+        return $result;
+    }
+
+    public function PositionDropdown($params)
+    {
+        $positions = tblPositions::select('PositionCode','Description')->get();
+        
+        $result='';
+        if($params['addBlank']) $result = '<option value="">Select Position</option>';
+        
+        if (isset($positions) && !empty($positions)) {
+                
+            foreach ($positions as $key => $row) {
+                $Desc = strtoupper($row->Description);  
+                $result .= "<option value=\"{$row->PositionCode}\">{$Desc}</option>";
+            }
+        }
+        
+        return $result;
+    }
+
 }

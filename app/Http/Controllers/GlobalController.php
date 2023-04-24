@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\Validator;
 
 class GlobalController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function Profile(Request $request,$id)
     {
         $AdminClass = new AdminClass;
@@ -19,15 +24,16 @@ class GlobalController extends Controller
         $personalData = tblEmployees::where(['user_id' => $decrypID])->first();
         
         $imgSrc = $this->fetchImg($decrypID);
-        
-        $data['data'] = $personalData;
-        $data['position'] = $AdminClass->PostDesc($personalData->Position);
-        $data['EmpfileActive'] = 'active';
-        $data['listActive'] = 'active';
-        $data['menu'] = 'menu-open';
-        $data['id'] = $decrypID; 
-        $data['imgData'] = isset($imgSrc) ? $imgSrc:"";
 
+        $data=[
+            'data' => $personalData,
+            'position' => $AdminClass->PostDesc($personalData->Position),
+            'EmpfileActive' => 'active',
+            'listActive' => 'active',
+            'menu' => 'menu-open',
+            'id' => $decrypID,
+            'imgData' => isset($imgSrc) ? $imgSrc:"",
+        ];
 
         return view('components.profile',$data);
     }
@@ -35,7 +41,7 @@ class GlobalController extends Controller
     public function uploadImage(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'file' => 'required|image|max:2048' //max file size in KB
+            'file' => 'required|image' //max file size in KB
         ]);
 
         $return = ['status' => 0, 'message' => $validator->errors()->all(), 'newImgSrc' => "" ];

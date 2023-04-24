@@ -26,20 +26,23 @@ class AdminController extends Controller
 
     public function BranchList()
     {
+        $AdminClass = new AdminClass;
+
         $data['activeBranch'] = 'active';
-        $data['managers'] = tblEmployees::select('user_id','Name')->where(['Position' => 'MNGR'])->get();
+        $data['managers'] = $AdminClass->ManagersDropdown(['addBlank' => true]);
 
         return view('Admin.branchlist',$data);
     }
 
     public function employeeList()
     {
+        $AdminClass = new AdminClass;
 
         $data['EmpfileActive'] = 'active';
         $data['listActive'] = 'active';
         $data['menu'] = 'menu-open';
-        $data['positions'] = tblPositions::select('PositionCode','Description')->get();
-        $data['branches'] = tblBranches::select('BranchCode','Description')->get();
+        $data['positions'] = $AdminClass->PositionDropdown(['addBlank' => true]);
+        $data['branches'] = $AdminClass->BranchDropdown(['addBlank' => true]);
 
         return view('Admin.EmployeeList',$data);
     }
@@ -194,8 +197,8 @@ class AdminController extends Controller
             $branchDesc = $AdminClass->Branchdesc($row->BranchCode);
 
             $actionButton = "<div class='btn-group btn-group-sm'>                                           
-                                    <a class='btn btn-success edit' data-id='{$row->user_id}'><i class='fa fa-edit'></i></a>
-                                    <a class='btn btn-danger delete' data-id='{$row->user_id}'><i class='fa fa-trash'></i></a>
+                                    <a class='btn btn-success edit' data-id='{$row->id}'><i class='fa fa-edit'></i></a>
+                                    <a class='btn btn-danger delete' data-id='{$row->id}'><i class='fa fa-trash'></i></a>
                                     <a class='btn btn-success view' data-id='{$row->user_id}'><i class='fa fa-eye'></i></a>
                                 </div>";
 
@@ -315,7 +318,7 @@ class AdminController extends Controller
             'status' => 0
         ];
         
-        $employee = tblEmployees::where(['user_id' => $var->id])->first();
+        $employee = tblEmployees::where(['id' => $var->id])->first();
 
         if (!empty($employee)) {
             $result=[

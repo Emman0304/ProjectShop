@@ -19,7 +19,7 @@ class CreateTblFilesTable extends Migration
             $table->string('name');
             $table->string('type');
             $table->string('size');
-            $table->binary('data',16777215);
+            $table->binary('data')->nullable(); # change manually the data type of column from blob to longblob.
             $table->timestamps();
         });
     }
