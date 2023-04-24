@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\Validator;
 
 class GlobalController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function Profile(Request $request,$id)
     {
         $AdminClass = new AdminClass;
@@ -36,7 +41,7 @@ class GlobalController extends Controller
     public function uploadImage(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'file' => 'required|image|max:2048' //max file size in KB
+            'file' => 'required|image' //max file size in KB
         ]);
 
         $return = ['status' => 0, 'message' => $validator->errors()->all(), 'newImgSrc' => "" ];
