@@ -19,15 +19,16 @@ class GlobalController extends Controller
         $personalData = tblEmployees::where(['user_id' => $decrypID])->first();
         
         $imgSrc = $this->fetchImg($decrypID);
-        
-        $data['data'] = $personalData;
-        $data['position'] = $AdminClass->PostDesc($personalData->Position);
-        $data['EmpfileActive'] = 'active';
-        $data['listActive'] = 'active';
-        $data['menu'] = 'menu-open';
-        $data['id'] = $decrypID; 
-        $data['imgData'] = isset($imgSrc) ? $imgSrc:"";
 
+        $data=[
+            'data' => $personalData,
+            'position' => $AdminClass->PostDesc($personalData->Position),
+            'EmpfileActive' => 'active',
+            'listActive' => 'active',
+            'menu' => 'menu-open',
+            'id' => $decrypID,
+            'imgData' => isset($imgSrc) ? $imgSrc:"",
+        ];
 
         return view('components.profile',$data);
     }

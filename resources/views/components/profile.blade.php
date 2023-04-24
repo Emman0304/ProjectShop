@@ -1,8 +1,12 @@
 @extends('Admin.adminLayouts')
 @section('content')
-@php
-    // @dd($data->Name);
-@endphp
+
+<style>
+  .inpHeight{
+    height: auto !important;
+  }
+</style>
+
 <div class="content-wrapper" style="min-height: 1416px;">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -388,7 +392,7 @@
 		<div class="col col-md-12">
 			<div class="form-group">
 				<label>Upload file</label>
-				<input type="file" name="image" id="image" class="form-control">
+				<input type="file" name="image" id="image" class="form-control inpHeight">
 			</div>
 		</div>
 	</div>

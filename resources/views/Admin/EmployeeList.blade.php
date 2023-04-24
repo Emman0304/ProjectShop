@@ -78,19 +78,13 @@
 
             <label for="exampleInputText" class="form-label">Main Branch</label>
             <select name="branchCode" id="branchCode" class="form-control" required>
-              <option value="">Select Branch</option>
-              @foreach ( $branches as $branch )
-                <option value="{{ $branch->BranchCode }}">{{ $branch->Description }}</option>
-              @endforeach
+              {!! $branches !!}
             </select>
         </div>
         <div class="mb-3">
             <label for="exampleInputText" class="form-label">Position</label>
             <select name="Position" id="Position" class="form-control" required>
-              <option value="">Select Position</option>
-              @foreach ( $positions as $pos )
-                <option value="{{ $pos->PositionCode }}">{{ $pos->Description }}</option>
-              @endforeach
+              {!! $positions !!}
             </select>
         </div>
         <div class="mb-3">

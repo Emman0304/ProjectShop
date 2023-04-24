@@ -26,20 +26,23 @@ class AdminController extends Controller
 
     public function BranchList()
     {
+        $AdminClass = new AdminClass;
+
         $data['activeBranch'] = 'active';
-        $data['managers'] = tblEmployees::select('user_id','Name')->where(['Position' => 'MNGR'])->get();
+        $data['managers'] = $AdminClass->ManagersDropdown(['addBlank' => true]);
 
         return view('Admin.branchlist',$data);
     }
 
     public function employeeList()
     {
+        $AdminClass = new AdminClass;
 
         $data['EmpfileActive'] = 'active';
         $data['listActive'] = 'active';
         $data['menu'] = 'menu-open';
-        $data['positions'] = tblPositions::select('PositionCode','Description')->get();
-        $data['branches'] = tblBranches::select('BranchCode','Description')->get();
+        $data['positions'] = $AdminClass->PositionDropdown(['addBlank' => true]);
+        $data['branches'] = $AdminClass->BranchDropdown(['addBlank' => true]);
 
         return view('Admin.EmployeeList',$data);
     }
