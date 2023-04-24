@@ -271,7 +271,8 @@ class AdminController extends Controller
 
             $params =[
                 'branch' => $var->branchCode,
-                'position' => $var->Position
+                'position' => $var->Position,
+                'id' => $var->id
             ];
 
             $tosave=[

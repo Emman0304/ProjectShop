@@ -53,22 +53,28 @@ class Admin{
     {
         $var = (object) $params;
         $zeros = 6;
-        $checkID = tblEmployees::where(['BranchCode' => $var->branch,'Position' => $var->position])
+
+        if (isset($var->id) && !empty($var->id)) {
+            $checkID = tblEmployees::where(['id' => $var->id])->first();
+            $ID = $checkID->user_id;
+        }else{
+            $checkID = tblEmployees::where(['BranchCode' => $var->branch,'Position' => $var->position])
                     ->orderBy('id','desc')
                     ->first();
 
-        $lastID = isset($checkID->user_id) ? $checkID->user_id:"";
+            $lastID = isset($checkID->user_id) ? $checkID->user_id:"";
 
-        if (!empty($lastID)) {
-            $explodeID = explode("-",$lastID);
-            $incrementID = $explodeID[1]+1;
-            $number = sprintf("%0{$zeros}d", $incrementID);
-        }else{
-            $incrementID = 0+1;
-            $number = sprintf("%0{$zeros}d", $incrementID);
+            if (!empty($lastID)) {
+                $explodeID = explode("-",$lastID);
+                $incrementID = $explodeID[1]+1;
+                $number = sprintf("%0{$zeros}d", $incrementID);
+            }else{
+                $incrementID = 0+1;
+                $number = sprintf("%0{$zeros}d", $incrementID);
+            }
+
+            $ID = $var->branch.$var->position."-".$number;
         }
-
-        $ID = $var->branch.$var->position."-".$number;
         
         return $ID;
     }
