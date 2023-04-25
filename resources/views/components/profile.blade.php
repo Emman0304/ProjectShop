@@ -396,7 +396,7 @@
             <label>Upload file</label>
           </div>
           <div class="col-sm-6">
-            <div id="loadingIcon" style="display: none;">
+            <div id="loadingIcon">
             </div>
           </div>
         </div>

@@ -84,7 +84,7 @@ class Admin{
         $employees = tblEmployees::select('user_id','Name')->where(['Position' => 'MNGR'])->get();
 
         $result='';
-        if($params['addBlank']) $result = '<option value="">Select Manager</option>';
+        if($params['addBlank']) $result = '<option value="">- Select Manager -</option>';
         
         if (isset($employees) && !empty($employees)) {
             foreach ($employees as $key => $row) {
@@ -101,7 +101,7 @@ class Admin{
         $branches = tblBranches::select('BranchCode','Description')->get();
         
         $result='';
-        if($params['addBlank']) $result = '<option value="">Select Branch</option>';
+        if($params['addBlank']) $result = '<option value="">- Select Branch -</option>';
         
         if (isset($branches) && !empty($branches)) {
             foreach ($branches as $key => $row) {
@@ -118,7 +118,7 @@ class Admin{
         $positions = tblPositions::select('PositionCode','Description')->get();
         
         $result='';
-        if($params['addBlank']) $result = '<option value="">Select Position</option>';
+        if($params['addBlank']) $result = '<option value="">- Select Position -</option>';
         
         if (isset($positions) && !empty($positions)) {
                 

@@ -130,7 +130,15 @@
             <input name="Address" type="text" class="form-control" id="Address" required>
         </div>
 
-        <button id="submit" type="submit" class="btn btn-primary">Save</button>
+        <div class="row">
+          <div class="col-sm-2">
+            <button id="submit" type="submit" class="btn btn-primary">Save</button>
+          </div>
+          <div class="coll-sm-3">
+            <div id="loadingIcon">
+            </div>
+          </div>
+        </div>
 
     @endcomponent
     </div>
@@ -239,6 +247,7 @@
 
     $('#addEmployee').submit(function (e) { 
       e.preventDefault();
+      LoadingOverlay(true,'#loadingIcon');
       var form_data = $("#addEmployee").serializeArray();
 
       $.ajax({
@@ -248,6 +257,7 @@
         // dataType: "dataType",
         success: function (response) {
           if (response.status > 0) {
+            LoadingOverlay(false,'#loadingIcon');
             Swal.fire(
               response.message,
               '',
@@ -257,6 +267,7 @@
               reload();   
             });
           }else{
+            LoadingOverlay(false,'#loadingIcon');
             var errors = response.message;
             var errorMsg = '<ul>';
             $.each(errors, function (key, value) {
