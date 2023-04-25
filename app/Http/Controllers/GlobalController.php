@@ -41,7 +41,7 @@ class GlobalController extends Controller
     public function uploadImage(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'file' => 'required|image' //max file size in KB
+            'file' => 'required|image'
         ]);
 
         $return = ['status' => 0, 'message' => $validator->errors()->all(), 'newImgSrc' => "" ];

@@ -61,6 +61,7 @@ class AdminController extends Controller
         $var = (object) $request->all();
 
         $validate = Validator::make($request->all(),[
+            "id" => 'nullable|integer',
             "Address" => "required",
             "Description" => "required",
             "EmployeeCount" => "required|integer",
@@ -242,6 +243,7 @@ class AdminController extends Controller
         $AdminClass = new AdminClass;
     
         $validate = Validator::make($request->all(),[
+            "id" =>'nullable|integer',
             "Address" => "required",
             "contactNo" => "required|unique:tbl_employees,ContactNo,".$var->id,
             "Position" => "required",
@@ -313,7 +315,7 @@ class AdminController extends Controller
 
     public function editEmployee(Request $request){
         $var = (object) $request->all();
-   
+ 
         $result=[
             'data' => "Error Occured.",
             'status' => 0

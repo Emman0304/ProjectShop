@@ -17,7 +17,7 @@
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item"><a href="{{ route('employeeList') }}">Back to list</a></li>
               <li class="breadcrumb-item active">User Profile</li>
             </ol>
           </div>
@@ -391,7 +391,15 @@
   <div class="row">
 		<div class="col col-md-12">
 			<div class="form-group">
-				<label>Upload file</label>
+        <div class="row">
+          <div class="col-sm-3">
+            <label>Upload file</label>
+          </div>
+          <div class="col-sm-6">
+            <div id="loadingIcon" style="display: none;">
+            </div>
+          </div>
+        </div>
 				<input type="file" name="image" id="image" class="form-control inpHeight">
 			</div>
 		</div>
@@ -409,6 +417,8 @@
 
       $('#uploadProfForm').on('submit', function (e) {
         e.preventDefault();
+
+        LoadingOverlay(true,'#loadingIcon');
         
         var fileInput = document.getElementById('image');
         var file = fileInput.files[0];
@@ -429,8 +439,8 @@
           processData: false,
           contentType: false,
           success: function(response) {
-            console.log(response);
             if (response.status > 0) {
+              LoadingOverlay(false,'#loadingIcon');
               Swal.fire(
                 response.message,
                 '',
@@ -440,6 +450,7 @@
                   imgReload(response.newImgSrc);
               });
             }else{
+              LoadingOverlay(false,'#loadingIcon');
               var errors = response.message;
               var errorMsg = '<ul>';
               $.each(errors, function (key, value) {

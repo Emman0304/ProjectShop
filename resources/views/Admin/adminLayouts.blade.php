@@ -287,6 +287,9 @@
 {{-- sweet alert --}}
 <script src="{{ asset('plugins/sweetalert2/sweetalert2.min.js') }}"></script>
 
+<!-- Loading Overlay -->
+<script src="{{ asset('plugins/js/Global.js') }}"></script>
+
 <script>
   $.ajaxSetup({
   headers: {
