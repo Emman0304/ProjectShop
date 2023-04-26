@@ -131,13 +131,8 @@
         </div>
 
         <div class="row">
-          <div class="col-sm-2">
             <button id="submit" type="submit" class="btn btn-primary">Save</button>
-          </div>
-          <div class="coll-sm-3">
-            <div id="loadingIcon">
-            </div>
-          </div>
+            <div id="loadingIcon"></div>
         </div>
 
     @endcomponent

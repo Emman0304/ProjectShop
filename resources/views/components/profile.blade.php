@@ -387,25 +387,18 @@
   </div>
 
   @component('components.modal',['modal_id' => 'uploadProf','title' => 'Upload Image','form_id' => 'uploadProfForm', 'enctype' => 'multipart/form-data'])
-  
-  <div class="row">
-		<div class="col col-md-12">
-			<div class="form-group">
-        <div class="row">
-          <div class="col-sm-3">
-            <label>Upload file</label>
+    <div class="row">
+      <div class="col col-md-12">
+        <div class="form-group">
+          <div class="row">
+              <label>Upload File</label>
+              <div id="loadingIcon"></div>
           </div>
-          <div class="col-sm-6">
-            <div id="loadingIcon">
-            </div>
-          </div>
+          <input type="file" name="image" id="image" class="form-control inpHeight">
         </div>
-				<input type="file" name="image" id="image" class="form-control inpHeight">
-			</div>
-		</div>
-	</div>
-  <button type="submit" class="btn btn-primary" >Upload</button>
-
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary" >Upload</button>
   @endcomponent
 
 @endsection
