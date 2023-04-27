@@ -66,6 +66,8 @@
             </div>
         </div>
     </section>
+  </div>
+  <!-- /.content-wrapper -->
 
     @component('components.modal',['modal_id' => 'exampleModal','title' => 'Add New Branch','form_id' => 'addBranch'  ])
       
@@ -96,8 +98,6 @@
       <button id="submit" type="submit" class="btn btn-primary">Save</button>
 
     @endcomponent
-  </div>
-  <!-- /.content-wrapper -->
 
 @endsection
 

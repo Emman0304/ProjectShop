@@ -45,6 +45,10 @@ Route::prefix('admin')->group(function() {
     Route::post('/addPosition',[AdminController::class,'addPosition'])->name('addPosition');
     Route::post('/editPosition',[AdminController::class,'editPosition'])->name('editPosition');   
     Route::post('/deletePosition',[AdminController::class,'deletePosition'])->name('deletePosition'); 
+
+    //User Accounts
+    Route::get('/userlist',[AdminController::class,'usersList'])->name('userList');
+    Route::get('/usersTable',[AdminController::class,'usersTable'])->name('usersTable');
 });
 
 Route::prefix('global')->group(function(){

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Classes\Admin as AdminClass;
 use App\Models\tblEmployees;
 use App\Models\tblPositions;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
@@ -54,6 +55,13 @@ class AdminController extends Controller
         $data['menu'] = 'menu-open';
 
         return view('Admin.positions',$data);
+    }
+
+    public function usersList(Request $request)
+    {
+        $data['activeUserAccs'] = 'active';
+
+        return view('Admin.userAccounts',$data);
     }
 
     public function AddBranch(Request $request)
@@ -445,5 +453,34 @@ class AdminController extends Controller
         }
         
         return $return;
+    }
+
+    public function usersTable(Request $request)
+    {
+        $users = User::select(['id','name','email'])->orderBy('id','desc')->get();
+        $userArray = array();
+        $count=0;
+        
+        foreach ($users as $key => $row) {
+
+            $actionButton = "<div class='btn-group btn-group-sm'>                                           
+                                    <a class='btn btn-success edit' data-id='{$row->id}'><i class='fa fa-edit'></i></a>
+                                    <a class='btn btn-danger delete' data-id='{$row->id}'><i class='fa fa-trash'></i></a>
+                                </div>";
+
+            $userArray[$count++] = array(
+                $row->id,
+                'Sample Branch',
+                $row->name,
+                $row->email,
+                'Sample Username',
+                'Sample Admin',
+                $actionButton
+            );
+        }
+
+        $result['data'] = $userArray;
+
+        return  json_encode($result);
     }
 }
