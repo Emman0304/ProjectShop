@@ -49,6 +49,8 @@ Route::prefix('admin')->group(function() {
     //User Accounts
     Route::get('/userlist',[AdminController::class,'usersList'])->name('userList');
     Route::get('/usersTable',[AdminController::class,'usersTable'])->name('usersTable');
+    Route::post('/addUser',[AdminController::class,'addUser'])->name('addUser');
+    Route::post('/deleteUser',[AdminController::class,'deleteUser'])->name('deleteUser');
 });
 
 Route::prefix('global')->group(function(){

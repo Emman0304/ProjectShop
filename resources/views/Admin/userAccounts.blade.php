@@ -69,28 +69,42 @@
 </div>
 <!-- /.content-wrapper -->
 
-    @component('components.modal',['modal_id' => 'addUser','title' => 'Add New User','form_id' => 'addUser'  ])
-    
-    <div class="mb-3">
-        <input name="id" type="hidden" class="form-control" id="id">
+    @component('components.modal',['modal_id' => 'addUser','title' => 'Add New User','form_id' => 'addUserForm'  ])
+        <div class="mb-3">
+            <input name="id" type="hidden" class="form-control" id="id">
 
-        <label for="exampleInputText" class="form-label">Name</label>
-        <input name="Name" type="text" class="form-control" id="Name" required>
-    </div>
-    <div class="mb-3">
-        <label for="exampleInputText" class="form-label">Email</label>
-        <input name="Email" type="text" class="form-control" id="Email" required>
-    </div>
-    <div class="mb-3">
-        <label for="exampleInputText" class="form-label">Password</label>
-        <input name="Password" type="password" class="form-control" id="Password" required>
-    </div>
-    <div class="mb-3">
-        <label for="exampleInputText" class="form-label">Confirm Password</label>
-        <input name="confPass" type="password" class="form-control" id="confPass" required>
-    </div>
-    <button id="submit" type="submit" class="btn btn-primary">Save</button>
-
+            <label for="exampleInputText" class="form-label">Branch</label>
+            <select class="form-control" name="Branch" id="Branch" required>
+                {!! $branches !!}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputText" class="form-label">Name</label>
+            <input name="Name" type="text" class="form-control" id="Name" required>
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputText" class="form-label">Position</label>
+            <select class="form-control" name="Position" id="Position" required>
+                {!! $positions !!}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputText" class="form-label">Username</label>
+            <input name="Username" type="text" class="form-control" id="Username" required>
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputText" class="form-label">Email</label>
+            <input name="Email" type="text" class="form-control" id="Email" required>
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputText" class="form-label">Password</label>
+            <input name="Password" type="password" class="form-control" id="Password" required>
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputText" class="form-label">Confirm Password</label>
+            <input name="Confirm_Password" type="password" class="form-control" id="confPass" required>
+        </div>
+        <button id="submit" type="submit" class="btn btn-primary">Save</button>
     @endcomponent
 
 @endsection
@@ -108,31 +122,7 @@
                 autoWidth: false,
                 ordering: false,
                 rowCallback : function(row,data,DisplayIndex){
-
-                    $(row).find('.edit').unbind('click').on('click',function(){
-                        id = $(this).attr('data-id');
-
-                        $.ajax({
-                            type: "POST",
-                            url: "{{ route('editBranch') }}",
-                            data:{
-                            id:id
-                            },
-                            // dataType: "dataType",
-                            success: function (response) {
-                            if (response.status > 0) {
-                                $('#id').val(response.data.id);
-                                $('#branchCode').val(response.data.BranchCode);
-                                $('#Description').val(response.data.Description);
-                                $('#Address').val(response.data.Address);
-                                $('#Manager').val(response.data.Manager);
-                                $('#EmployeeCount').val(response.data.NoEmployees);
-                                $("#exampleModal").modal('show');
-                                }
-                            }
-                        });
-                    });
-
+                    
                     $(row).find('.delete').unbind('click').on('click',function(){
                         id = $(this).attr('data-id');
 
@@ -149,7 +139,7 @@
                                 
                                 $.ajax({
                                     type: "POST",
-                                    url: "{{ route('deleteBranch') }}",
+                                    url: "{{ route('deleteUser') }}",
                                     data: {
                                         id:id
                                     },
@@ -162,7 +152,6 @@
                                                 'success'
                                                 )
                                                 reload();
-
                                             }
                                         }
                                     });
@@ -171,6 +160,58 @@
                         });   
                     }
                 });
+
+            $('#addUserForm').submit(function (e) { 
+                e.preventDefault();
+
+                var form_data = $('#addUserForm').serializeArray();
+                
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('addUser') }}",
+                    data: form_data,
+                    // dataType: "dataType",
+                    success: function (response) {
+                        if (response.status > 0) {
+                            Swal.fire(
+                                response.message,
+                                '',
+                                'success'
+                            ).then((ok) => {
+                                $("#addUser").modal('hide');
+                                reload();   
+                            });
+                        }else{
+                            var errors = response.message;
+                            var errorMsg = '<ul>';
+                            $.each(errors, function (key, value) {
+                                errorMsg += '<li>' + value + '</li>';
+                            });
+                            errorMsg += '</ul>';
+
+                            Swal.fire(
+                                errorMsg,
+                                '',
+                                'warning'
+                            )
+                        }                            
+                    }
+                });
+                
+            });
+
+            function reload(){
+                dtable.ajax.reload();
+            }
+
+            $('#addUser').on('hide.bs.modal', function () {
+                $('#id').val('');
+                $('#Branch').val('');
+                $('#Name').val('');
+                $('#Position').val('');
+                $('#Username').val('');
+                $('#Email').val('');
+            });
 
         });
     </script>
