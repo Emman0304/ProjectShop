@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Classes\Admin as AdminClass;
+use App\Models\tblEmployees;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -118,6 +119,21 @@ class UserFileController extends Controller
                 'status' => 1,
                 'message' => "Deleted Succesfully."
             ];
+        }
+        
+        return $return;
+    }
+
+    public function findID(Request $request)
+    {
+        $var = (object) $request->all();
+        // dd($var);
+        $return = ['status' => 0, 'message' => 'Employee Not Found.', 'data' => ""];
+
+        if(isset($var->id) && !empty($var->id)){
+            $employees = tblEmployees::where(['user_id' => $var->id])->first();
+
+            $return = ['status' => 1, 'message' => 'Employee Found.', 'data' => $employees ];
         }
         
         return $return;

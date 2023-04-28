@@ -32,6 +32,8 @@
   {{-- sweet alert --}}
   <link rel="stylesheet" href="{{ asset('plugins/sweetalert2/sweetalert2.css') }}">
 
+  <link rel="stylesheet" href="{{ asset('dist/css/userFile.css') }}">
+
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">

@@ -59,6 +59,7 @@ Route::prefix('admin')->group(function() {
 
     //Create/Generate Account
     Route::get('/createGenAcc',[UserFileController::class,'CreateGenAcc'])->name('CreateGenAcc');
+    Route::post('/findID',[UserFileController::class,'findID'])->name('findID');
 });
 
 Route::prefix('global')->group(function(){
