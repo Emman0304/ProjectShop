@@ -46,11 +46,14 @@ Route::prefix('admin')->group(function() {
     Route::post('/editPosition',[AdminController::class,'editPosition'])->name('editPosition');   
     Route::post('/deletePosition',[AdminController::class,'deletePosition'])->name('deletePosition'); 
 
-    //User Accounts
+    //User List
     Route::get('/userlist',[AdminController::class,'usersList'])->name('userList');
     Route::get('/usersTable',[AdminController::class,'usersTable'])->name('usersTable');
     Route::post('/addUser',[AdminController::class,'addUser'])->name('addUser');
     Route::post('/deleteUser',[AdminController::class,'deleteUser'])->name('deleteUser');
+
+    //Create/Generate Account
+    Route::get('/createGenAcc',[AdminController::class,'CreateGenAcc'])->name('CreateGenAcc');
 });
 
 Route::prefix('global')->group(function(){

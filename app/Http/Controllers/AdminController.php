@@ -42,7 +42,7 @@ class AdminController extends Controller
 
         $data['EmpfileActive'] = 'active';
         $data['listActive'] = 'active';
-        $data['menu'] = 'menu-open';
+        $data['EmployeeMenu'] = 'menu-open';
         $data['positions'] = $AdminClass->PositionDropdown(['addBlank' => true]);
         $data['branches'] = $AdminClass->BranchDropdown(['addBlank' => true]);
 
@@ -53,7 +53,7 @@ class AdminController extends Controller
     {
         $data['EmpfileActive'] = 'active';
         $data['positionActive'] = 'active';
-        $data['menu'] = 'menu-open';
+        $data['EmployeeMenu'] = 'menu-open';
 
         return view('Admin.positions',$data);
     }
@@ -62,11 +62,24 @@ class AdminController extends Controller
     {
         $AdminClass = new AdminClass;
 
-        $data['activeUserAccs'] = 'active';
+        $data['UserFileActive'] = 'active';
+        $data['UserMenu'] = 'menu-open';
+        $data['activeUserList'] = 'active';
         $data['positions'] = $AdminClass->PositionDropdown(['addBlank' => true]);
         $data['branches'] = $AdminClass->BranchDropdown(['addBlank' => true]);
 
         return view('Admin.userAccounts',$data);
+    }
+
+    public function CreateGenAcc()
+    {
+        $AdminClass = new AdminClass;
+
+        $data['UserFileActive'] = 'active';
+        $data['UserMenu'] = 'menu-open';
+        $data['activeCreateGen'] = 'active';
+ 
+        return view('Admin.CreateGenerateAcc',$data);
     }
 
     public function AddBranch(Request $request)

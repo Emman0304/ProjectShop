@@ -197,7 +197,7 @@
               </p>
             </a>
           </li>
-          <li class="nav-item {{ isset($menu) ? $menu:'' }} ">
+          <li class="nav-item {{ isset($EmployeeMenu) ? $EmployeeMenu:'' }} ">
             <a href="#" class="nav-link {{ isset($EmpfileActive) ? $EmpfileActive:'' }}">
               {{-- <i class="nav-icon fas fa-copy"></i> --}}
               <p>
@@ -231,13 +231,31 @@
               </li>
             </ul>
           </li>
-          <li class="nav-item">
-            <a href="{{ route('userList') }}" class="nav-link {{ isset($activeUserAccs) ? $activeUserAccs:'' }}">
-              {{-- <i class="nav-icon fas fa-th"></i> --}}
+          <li class="nav-item {{ isset($UserMenu) ? $UserMenu:'' }} ">
+            <a href="#" class="nav-link {{ isset($UserFileActive) ? $UserFileActive:'' }}">
+              {{-- <i class="nav-icon fas fa-copy"></i> --}}
               <p>
-                User Accounts
+                User File
+                <i class="fas fa-angle-left right"></i>
+                {{-- <span class="badge badge-info right">6</span> --}}
               </p>
             </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{ route('userList') }}" class="nav-link {{ isset($activeUserList) ? $activeUserList:'' }}">
+                  {{-- <i class="far fa-circle nav-icon"></i> --}}
+                  <p>User List</p>
+                </a>
+              </li>
+            </ul>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{  route('CreateGenAcc')  }}" class="nav-link {{ isset($activeCreateGen) ? $activeCreateGen:'' }}">
+                  {{-- <i class="far fa-circle nav-icon"></i> --}}
+                  <p>Create/Generate Account</p>
+                </a>
+              </li>
+            </ul>
           </li>
         </ul>
       </nav>
