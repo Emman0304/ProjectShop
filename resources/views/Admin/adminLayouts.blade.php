@@ -173,7 +173,7 @@
           <img src="{{ asset('dist/img/user2-160x160.jpg') }}" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">Alexander Pierce</a>
+          <a href="#" class="d-block">{{ Auth::user()->name }}</a>
         </div>
       </div>
 
@@ -197,7 +197,7 @@
               </p>
             </a>
           </li>
-          <li class="nav-item {{ isset($menu) ? $menu:'' }} ">
+          <li class="nav-item {{ isset($EmployeeMenu) ? $EmployeeMenu:'' }} ">
             <a href="#" class="nav-link {{ isset($EmpfileActive) ? $EmpfileActive:'' }}">
               {{-- <i class="nav-icon fas fa-copy"></i> --}}
               <p>
@@ -231,13 +231,31 @@
               </li>
             </ul>
           </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link">
-              {{-- <i class="nav-icon fas fa-th"></i> --}}
+          <li class="nav-item {{ isset($UserMenu) ? $UserMenu:'' }} ">
+            <a href="#" class="nav-link {{ isset($UserFileActive) ? $UserFileActive:'' }}">
+              {{-- <i class="nav-icon fas fa-copy"></i> --}}
               <p>
-                User Accounts
+                User File
+                <i class="fas fa-angle-left right"></i>
+                {{-- <span class="badge badge-info right">6</span> --}}
               </p>
             </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{ route('userList') }}" class="nav-link {{ isset($activeUserList) ? $activeUserList:'' }}">
+                  {{-- <i class="far fa-circle nav-icon"></i> --}}
+                  <p>User List</p>
+                </a>
+              </li>
+            </ul>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{  route('CreateGenAcc')  }}" class="nav-link {{ isset($activeCreateGen) ? $activeCreateGen:'' }}">
+                  {{-- <i class="far fa-circle nav-icon"></i> --}}
+                  <p>Create/Generate Account</p>
+                </a>
+              </li>
+            </ul>
           </li>
         </ul>
       </nav>
@@ -286,6 +304,9 @@
 
 {{-- sweet alert --}}
 <script src="{{ asset('plugins/sweetalert2/sweetalert2.min.js') }}"></script>
+
+<!-- Loading Overlay -->
+<script src="{{ asset('dist/js/Global.js') }}"></script>
 
 <script>
   $.ajaxSetup({

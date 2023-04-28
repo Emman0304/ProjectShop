@@ -40,31 +40,36 @@ class GlobalController extends Controller
 
     public function uploadImage(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'file' => 'required|image' //max file size in KB
-        ]);
+        if ($request->file != "undefined") {
 
-        $return = ['status' => 0, 'message' => $validator->errors()->all(), 'newImgSrc' => "" ];
+            $validator = Validator::make($request->all(), [
+                'file' => 'required|image'
+            ]);
 
-        if (!$validator->fails()) {
-            $image = $request->file('file');
-            $name = $image->getClientOriginalName();
-            $type = $image->getClientMimeType();
-            $size = $image->getSize();
-            $data = file_get_contents($image);
+            $return = ['status' => 0, 'message' => $validator->errors()->all(), 'newImgSrc' => "" ];
 
-            tblFiles::getModel()->updateOrCreate([
-                            'user_id' => $request->id,
-                        ],[
-                            'name' => $name,
-                            'type' => $type,
-                            'size' => $size,
-                            'data' => $data,
-                        ]);
+            if (!$validator->fails()) {
+                $image = $request->file('file');
+                $name = $image->getClientOriginalName();
+                $type = $image->getClientMimeType();
+                $size = $image->getSize();
+                $data = file_get_contents($image);
 
-            $newImgSrc = $this->fetchImg($request->id);
-            
-            $return = ['status' => 1, 'message' => 'Uploaded Successfully', 'newImgSrc' => $newImgSrc ];
+                tblFiles::getModel()->updateOrCreate([
+                                'user_id' => $request->id,
+                            ],[
+                                'name' => $name,
+                                'type' => $type,
+                                'size' => $size,
+                                'data' => $data,
+                            ]);
+
+                $newImgSrc = $this->fetchImg($request->id);
+                
+                $return = ['status' => 1, 'message' => 'Uploaded Successfully', 'newImgSrc' => $newImgSrc ];
+            }
+        }else{
+            $return = ['status' => 0, 'message' => 'No File Selected', 'newImgSrc' => "" ];
         }
     
         return $return;
