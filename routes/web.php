@@ -3,7 +3,10 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\BranchFileController;
+use App\Http\Controllers\EmployeeFileController;
 use App\Http\Controllers\GlobalController;
+use App\Http\Controllers\UserFileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,36 +27,38 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::prefix('admin')->group(function() {
-    // Branch File
+    // Dashboard
     Route::get('/dashboard', [AdminController::class, 'AdminDashboard'])->name('Admindashboard');
-    Route::get('/branchlist', [AdminController::class, 'BranchList'])->name('branchlist');
-    Route::post('/addbranch', [AdminController::class, 'AddBranch'])->name('addBranch');
-    Route::get('/branchTable',[AdminController::class,'BranchDtable'])->name('branchTable');
-    Route::post('/editBranch',[AdminController::class,'editBranch'])->name('editBranch');    
-    Route::post('/deleteBranch',[AdminController::class,'deleteBranch'])->name('deleteBranch'); 
+
+    // Branch File
+    Route::get('/branchlist', [BranchFileController::class, 'BranchList'])->name('branchlist');
+    Route::post('/addbranch', [BranchFileController::class, 'AddBranch'])->name('addBranch');
+    Route::get('/branchTable',[BranchFileController::class,'BranchDtable'])->name('branchTable');
+    Route::post('/editBranch',[BranchFileController::class,'editBranch'])->name('editBranch');    
+    Route::post('/deleteBranch',[BranchFileController::class,'deleteBranch'])->name('deleteBranch'); 
 
     // Employee File
-    Route::get('/empList',[AdminController::class,'employeeList'])->name('employeeList');
-    Route::get('/employeeTable',[AdminController::class,'employeeTable'])->name('employeeTable');
-    Route::post('/deleteEmployee',[AdminController::class,'deleteEmployee'])->name('deleteEmployee'); 
-    Route::post('/addEmployee', [AdminController::class, 'AddEmployee'])->name('AddEmployee');
-    Route::post('/editEmployee',[AdminController::class,'editEmployee'])->name('editEmployee');    
+    Route::get('/empList',[EmployeeFileController::class,'employeeList'])->name('employeeList');
+    Route::get('/employeeTable',[EmployeeFileController::class,'employeeTable'])->name('employeeTable');
+    Route::post('/deleteEmployee',[EmployeeFileController::class,'deleteEmployee'])->name('deleteEmployee'); 
+    Route::post('/addEmployee', [EmployeeFileController::class, 'AddEmployee'])->name('AddEmployee');
+    Route::post('/editEmployee',[EmployeeFileController::class,'editEmployee'])->name('editEmployee');    
 
     //Positions
-    Route::get('/positions',[AdminController::class,'positionList'])->name('positionList');
-    Route::get('positionTable',[AdminController::class,'PositionTable'])->name('positionTable');
-    Route::post('/addPosition',[AdminController::class,'addPosition'])->name('addPosition');
-    Route::post('/editPosition',[AdminController::class,'editPosition'])->name('editPosition');   
-    Route::post('/deletePosition',[AdminController::class,'deletePosition'])->name('deletePosition'); 
+    Route::get('/positions',[EmployeeFileController::class,'positionList'])->name('positionList');
+    Route::get('positionTable',[EmployeeFileController::class,'PositionTable'])->name('positionTable');
+    Route::post('/addPosition',[EmployeeFileController::class,'addPosition'])->name('addPosition');
+    Route::post('/editPosition',[EmployeeFileController::class,'editPosition'])->name('editPosition');   
+    Route::post('/deletePosition',[EmployeeFileController::class,'deletePosition'])->name('deletePosition'); 
 
     //User List
-    Route::get('/userlist',[AdminController::class,'usersList'])->name('userList');
-    Route::get('/usersTable',[AdminController::class,'usersTable'])->name('usersTable');
-    Route::post('/addUser',[AdminController::class,'addUser'])->name('addUser');
-    Route::post('/deleteUser',[AdminController::class,'deleteUser'])->name('deleteUser');
+    Route::get('/userlist',[UserFileController::class,'usersList'])->name('userList');
+    Route::get('/usersTable',[UserFileController::class,'usersTable'])->name('usersTable');
+    Route::post('/addUser',[UserFileController::class,'addUser'])->name('addUser');
+    Route::post('/deleteUser',[UserFileController::class,'deleteUser'])->name('deleteUser');
 
     //Create/Generate Account
-    Route::get('/createGenAcc',[AdminController::class,'CreateGenAcc'])->name('CreateGenAcc');
+    Route::get('/createGenAcc',[UserFileController::class,'CreateGenAcc'])->name('CreateGenAcc');
 });
 
 Route::prefix('global')->group(function(){
