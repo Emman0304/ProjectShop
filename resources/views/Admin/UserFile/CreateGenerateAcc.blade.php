@@ -101,28 +101,33 @@
                 if (response.status > 0) {
                     simulateProcess(100);
                 }else{
-                    simulateProcess(10);
+                    simulateProcess(1);
                 }
-                //  console.log(response);
+                 console.log(response);
               }
             });
 
         });
 
+        // Assuming you have a process that takes some time to complete
         function simulateProcess(status) {
           var progress = 0;
-          // var interval = setInterval(function() {
-            // progress += status; // Increase the progress by 10% for demonstration purposes
+          var interval = setInterval(function() {
+            progress += status; // Increase the progress by 10% for demonstration purposes
             
             // Update the progress bar width
-            $('.progress-bar').css('width', status + '%');
+            $('.progress-bar').css('width', progress + '%');
             
             // Check if the process is complete
-            // if (progress > 100) {
-            //   clearInterval(interval); // Clear the interval
-            // }
-          // }, 1000); // 1000 milliseconds = 1 second
+            if (progress >= 100) {
+              clearInterval(interval); // Clear the interval
+            }
+          }, 1000); // 1000 milliseconds = 1 second
         }
+
+        // Call the function to start the process
+        // simulateProcess();
+
 
     });
   </script>

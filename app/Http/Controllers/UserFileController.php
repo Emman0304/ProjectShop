@@ -132,8 +132,9 @@ class UserFileController extends Controller
 
         if(isset($var->id) && !empty($var->id)){
             $employees = tblEmployees::where(['user_id' => $var->id])->first();
-
-            $return = ['status' => 1, 'message' => 'Employee Found.', 'data' => $employees ];
+            if(isset($employees) && !empty($employees)){
+                $return = ['status' => 1, 'message' => 'Employee Found.', 'data' => $employees ];
+            }     
         }
         
         return $return;
